@@ -13,9 +13,9 @@ class Event:
         self.accident_object = list()
 
     def event_loger(self, step: int):
-        self.accident(step)
+        self.__accident(step)
 
-    def accident(self, step: int):
+    def __accident(self, step: int):
         # list of start, end time, lane ID and position
         t_start = self.accident_var['start_time']
         t_end = self.accident_var['end_time']
@@ -31,15 +31,26 @@ class Event:
                 edge = location[index_accident]
                 pos = position[index_accident]
                 loaded_vehicle_list = traci.lane.getLastStepVehicleIDs(edge)
-                for v_id in loaded_vehicle_list:
-                    v_pos = traci.vehicle.getLanePosition(v_id)
-                    if best_pos < v_pos <= pos and traci.vehicle.getTypeID(v_id) == 'human':
-                        accident_vehicle = v_id
-                        best_pos = v_pos
-                    if v_pos > pos:
-                        self.accident_object.append(accident_vehicle)
-                        best_pos = 0
-                        break
+                if loaded_vehicle_list:
+                    for v_id in loaded_vehicle_list:
+                        v_pos = traci.vehicle.getLanePosition(v_id)
+                        if best_pos < v_pos <= pos and traci.vehicle.getTypeID(v_id) == 'human':
+                            accident_vehicle = v_id
+                            best_pos = v_pos
+                        if v_pos > pos:
+                            if accident_vehicle:
+                                self.accident_object.append(accident_vehicle)
+                            else:
+                                self.accident_object.append(v_id)
+                            best_pos = 0
+                            break
+                else:
+                    accident_index = t_start.index(step_start)
+                    pdb.set_trace()
+                    del t_start[accident_index]
+                    del t_end[accident_index]
+                    del location[accident_index]
+                    del position[accident_index]
         # put accident vehicles on hold
         for v_id in self.accident_object:
             traci.vehicle.setType(v_id, 'accident')
@@ -49,6 +60,7 @@ class Event:
         # accident over
         for step_end in t_end:
             if step == step_end:
+                pdb.set_trace()
                 index_accident = t_end.index(step_end)
                 # pdb.set_trace()
                 accident_vehicle = self.accident_object[index_accident]
@@ -56,3 +68,4 @@ class Event:
                 traci.vehicle.setLaneChangeMode(accident_vehicle, 1621)
                 traci.vehicle.setSpeedMode(accident_vehicle, 31)
                 traci.vehicle.setSpeed(accident_vehicle, -1)
+                self.accident_object.remove(accident_vehicle)
