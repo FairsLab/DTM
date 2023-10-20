@@ -1,0 +1,29 @@
+<configuration 
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+        <input>
+            <net-file value="network.net.xml"/>
+            <route-files value="flow.rou.xml"/>
+        </input>
+
+        <output>
+            <summary value="summary.out.xml"/>
+            <tripinfo value="tripinfo.out.xml"/>
+        </output>
+
+        <time>
+            <begin value="0"/>
+        </time>
+        <processing>
+            <route-steps value="200" />
+            <time-to-teleport value="1000.0" />
+            <eager-insert value="true" />
+        </processing>
+        <gui_only>
+            <gui-settings-file value="example.view.xml"/>
+        </gui_only>
+        <random_number>
+            <seed value="12345"/>
+        </random_number>
+</configuration>

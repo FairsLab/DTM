@@ -14,8 +14,8 @@ peak_start = 100  # peak hour start
 peak_end = 200  # peak hour end
 flow_off = 300  # off-peak hour flow N/hour
 flow_peak = 1800  # peak hour flow N/hour
-pm_off = 0.6  # off-peak  CV MPR
-pm_peak = 0.3  # peak hour CV MPR
+pm_off = 0.6  # off-peak  data car MPR
+pm_peak = 0.3  # peak hour data car MPR
 simulation_settings = {"period_gen": period_gen,
                        "peak_start": peak_start,
                        "peak_end": peak_end,
