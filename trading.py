@@ -18,6 +18,15 @@ def get_offer_info(input_data:str):
             }
     return json.dumps(offer_info)
 
+def generate_offer(input_data):
+    return {
+        "description": "交通事故信息数据",
+        "price": "12 dollars",
+        "amount": "1 bit",
+        "reason": "可以为你带来更高的交通效率和安全，提高交通流畅度，从而减少事故发生的可能性，并且对城市的交通管理有积极的影响。"
+    }
+
+
 class Vehicle(MetaActor):
     def propose_offer(self):
         # 整合输入数据
@@ -26,7 +35,9 @@ class Vehicle(MetaActor):
             'trading_data': self.trading_data,
             'preference': self.preference
         }
-
+        function_call = {
+            'function_name' : "generate_offer"
+        }
         # 转换input_data为适合openai.ChatCompletion.create()的格式
         prompt = format_input_for_openai(input_data)
 
@@ -34,14 +45,15 @@ class Vehicle(MetaActor):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages= [{"role": "system", "content": prompt}] ,
+            function = Offer,
+            function_call = "auto",
             max_tokens=1, 
             temperature=0.1,
             # 其他适当的参数
         )
-        
-
         # 从response中提取message
         message = response.choices[0].message
+        print(message)
 
         # 返回message给controller
         return message
@@ -127,15 +139,40 @@ def extract_and_format(response):
         "usage_tokens": response.usage.total_tokens
     }
 
-class Vehicle(MetaActor):
-    def propose_offer(self):
-        # 调用openai.ChatCompletion.create()，同时使用 Function Calling
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            prompt=format_input_for_openai(self),
-            functions=[extract_and_format]
-        )
-        return response
+# class Vehicle(MetaActor):
+#     def propose_offer(self):
+#         # 调用openai.ChatCompletion.create()，同时使用 Function Calling
+#         response = openai.ChatCompletion.create(
+#             model="gpt-3.5-turbo",
+#             prompt=format_input_for_openai(self),
+#             functions=[extract_and_format]
+#         )
+#         return response
+
+
+
+def generate_offer_request(vehicle):
+    # 构建请求的函数体
+    function_call = {
+        "function": "generate_offer",
+        "inputs": {
+            "description": "交通事故信息数据",
+            "personal_data": vehicle.personal_data,
+            "trading_data": vehicle.trading_data,
+            "preference": vehicle.preference
+        }
+    }
+    
+    # 这里的prompt可以根据您的具体需求进行调整
+    prompt = f"Generate an offer based on the following data: {function_call}"
+
+    return prompt
+
+
+
+
+
+
 
 class Controller(MetaActor):
     def decide_offer(self, message):
@@ -200,6 +237,6 @@ def judge(decision_message):
 # 运行演示
 if __name__ == "__main__":
 
-    _demo()
+    pass
 
 
