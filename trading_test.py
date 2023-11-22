@@ -1,10 +1,10 @@
 # 用于测试函数
-from .datatype import *
+from datatype import *
 import openai
 import logging
 import re
 import json
-from .datatype_test import *
+from trading import Vehicle
 
 # 导入 openai 库
 import openai
@@ -30,47 +30,34 @@ def openai_login(azure=False):
 
 openai_login(azure=True)
 
-class MetaActor:
-    personal_data: PersonalData
-    trading_data: TradingData
-    preference: Preference
-    
 
-class Vehicle(MetaActor):
-    def propose_offer(self):
-        # 整合输入数据
-        input_data = {
-            'personal_data': self.personal_data,
-            'trading_data': self.trading_data,
-            'preference': self.preference
-        }
-        function_call = {
-            'function_name' : "generate_offer"
-        }
-        # 转换input_data为适合openai.ChatCompletion.create()的格式
-        prompt = format_input_for_openai(input_data)
+# 智能车的个人数据
+vehicle_personal_data = PersonalData(
+    location=[10, 20]
+)
 
-        # 调用openai.ChatCompletion.create()来生成提议
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages= [{"role": "system", "content": prompt}] ,
-            function = Offer,
-            function_call = "auto",
-            max_tokens=1, 
-            temperature=0.1,
-            # 其他适当的参数
-        )
-        # 从response中提取message
-        message = response.choices[0].message
-        print(message)
+# 智能车的交易数据
+vehicle_trading_data = TradingData(
+    current_token=50.0,
+    history_average_price=10.0,
+    accident_info={
+        "Accident_Location": "road A",
+        "Distance_To_Trading_Point": "50m",
+        "Time_To_Trading_Point": "20s",
+        "Accident_Severity": "high",
+        "Traffic_Flow": "500 veh/h"
+    }
+)
 
-        # 返回message给controller
-        return message
+# 智能车的偏好设置
+vehicle_preference = Preference(
+    trading_purpose="获得最大化收益",
+    expected_price=10.0,
+    cost=1.0
+)
 
+vehicle_1 = Vehicle(vehicle_personal_data, vehicle_trading_data, vehicle_preference)
 
-def format_input_for_openai(input_data):
-    # 格式化input_data为字符串，适用于openai.ChatCompletion.create()
-    # 这里可以根据您的具体需求进行定制
-    return str(input_data)
-       
+print(vehicle_1.propose_offer)
+
         

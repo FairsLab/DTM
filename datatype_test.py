@@ -1,5 +1,5 @@
-from .datatype import PersonalData, TradingData, Preference, Offer, Decision
-from .trading import Vehicle, Controller
+from datatype import PersonalData, TradingData, Preference, Offer, Decision
+from trading import Vehicle, Controller
 
 # 智能车的个人数据
 vehicle_personal_data = PersonalData(

@@ -1,9 +1,9 @@
-from .datatype import *
+from datatype import *
 import openai
 import logging
 import re
 import json
-from .datatype_test import *
+from datatype_test import *
 
 class MetaActor:
     personal_data: PersonalData
@@ -28,6 +28,11 @@ def generate_offer(input_data):
 
 
 class Vehicle(MetaActor):
+    def __init__(self, personal_data, trading_data, preference) -> None:
+        self.personal_data = personal_data
+        self.trading_data = trading_data
+        self.preference = preference
+        
     def propose_offer(self):
         # 整合输入数据
         input_data = {
