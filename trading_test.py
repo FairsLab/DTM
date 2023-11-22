@@ -21,9 +21,7 @@ def openai_login(azure=False):
         openai.api_key = os.getenv("OPENAI_API_KEY")
         openai.api_base = os.getenv("OPENAI_ENDPOINT")
         openai.api_type = "azure"
-        openai.api_version = "2023-05-15"  # 请替换为您的 Azure OpenAI 服务的版本
-        openai.deployment_id = os.getenv("DEPLOYMENT")  # 请替换为您的 Azure OpenAI 服务的版本
-        print(openai.deployment_id)
+        openai.api_version = "2023-07-01-preview"  # 使用function_calling 有特定version需求，且gpt需要部署为0613版本
     else:
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -58,6 +56,6 @@ vehicle_preference = Preference(
 
 vehicle_1 = Vehicle(vehicle_personal_data, vehicle_trading_data, vehicle_preference)
 
-print(vehicle_1.propose_offer)
+print(vehicle_1.propose_offer())
 
         

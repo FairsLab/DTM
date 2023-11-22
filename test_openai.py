@@ -12,12 +12,12 @@ def openai_login(azure=False):
         openai.api_key = os.getenv("OPENAI_API_KEY")
         openai.api_base = os.getenv("OPENAI_ENDPOINT")
         openai.api_type = "azure"
-        openai.api_version = "2023-05-15"  # 请替换为您的 Azure OpenAI 服务的版本
+        openai.api_version = "2023-07-01-preview"  # 请替换为您的 Azure OpenAI 服务的版本
     else:
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-openai_login()
+openai_login(azure=True)
 
 
 def test1():
@@ -52,5 +52,43 @@ def test2():
     res = response.choices[0].message["content"]
     print(res)
 
+def test3():
+    messages= [
+        {"role": "user", "content": "Find beachfront hotels in San Diego for less than $300 a month with free breakfast."}
+    ]
 
-test2()
+    functions= [  
+        {
+            "name": "search_hotels",
+            "description": "Retrieves hotels from the search index based on the parameters provided",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The location of the hotel (i.e. Seattle, WA)"
+                    },
+                    "max_price": {
+                        "type": "number",
+                        "description": "The maximum price for the hotel"
+                    },
+                    "features": {
+                        "type": "string",
+                        "description": "A comma separated list of features (i.e. beachfront, free wifi, etc.)"
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    ]  
+
+    response = openai.ChatCompletion.create(
+        engine="gpt35", # engine = "deployment_name"
+        messages=messages,
+        functions=functions,
+        function_call="auto", 
+    )
+
+    print(response['choices'][0]['message'])
+
+test3()

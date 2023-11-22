@@ -25,31 +25,36 @@ class Preference:
 
 
 Offer = [
-    {
-    "name" : "propose_offers",
-    "description": "propose data trading offer based on the information provided",
-    "parameters": 
-        {
-        "data_description": {
-            "type": "string",
-            "description": "The description of data which would be traded",
-            },
-        "price": {
-            "type" : "number",
-            "description": "the proposed price of the data",   #"12 dollars"
-            },
-        "amount": {
-            "type" : "number",
-            "description": "the amount of traded data",    
-        },   
-        "reason": {
-            "type" : "string",
-            "description": "the reason to convince controller to buy the data"
-        },       
-    }
-   
-            }
-]
+                        {
+                        "name" : "propose_offers",
+                        "description": "propose data trading offer based on the information provided",
+                        "parameters": {
+                                "type": "object",
+                                "properties": { 
+                            
+                            "data_description": {
+                                "type": "string",
+                                "description": "The description of data which would be traded",
+                                },
+                            "price": {
+                                "type" : "number",
+                                "description": "the proposed price of the data",   #"12 dollars"
+                                },
+                            "amount": {
+                                "type" : "number",
+                                "description": "the amount of traded data",    
+                            },   
+                            "reason": {
+                                "type" : "string",
+                                "description": "the reason to convince controller to buy the data"
+                            },       
+                        }
+                    
+                                },
+                "required": ["content"]
+                        
+                        }
+                    ]
 
 # "可以为你带来更高的交通效率和安全，提高交通流畅度，从而减少事故发生的可能性，并且对城市的交通管理有积极的影响。"
         
