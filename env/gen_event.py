@@ -10,7 +10,9 @@ class Event:
 
     def __init__(self, event: Dict):
         self.accident_var = event
-        self.accident_object = list()
+        self.accident_object = {}
+        self.accident_position = {}
+        self.accident_location = {}
 
     def event_loger(self, step: int):
         self.__accident(step)
@@ -39,9 +41,18 @@ class Event:
                             best_pos = v_pos
                         if v_pos > pos:
                             if accident_vehicle:
-                                self.accident_object.append(accident_vehicle)
+                                self.accident_object[index_accident] = accident_vehicle
+                                self.accident_position[index_accident] = traci.vehicle.getPosition(
+                                    accident_vehicle)
+                                self.accident_location[index_accident] = traci.vehicle.getRoadID(
+                                    accident_vehicle)
                             else:
-                                self.accident_object.append(v_id)
+                                self.accident_object[index_accident] = v_id
+                                self.accident_position[index_accident] = traci.vehicle.getPosition(
+                                    v_id)
+
+                                self.accident_location[index_accident] = traci.vehicle.getRoadID(
+                                    v_id)
                             best_pos = 0
                             break
                 else:
@@ -52,7 +63,7 @@ class Event:
                     del location[accident_index]
                     del position[accident_index]
         # put accident vehicles on hold
-        for v_id in self.accident_object:
+        for v_id in self.accident_object.values():
             traci.vehicle.setType(v_id, 'accident')
             traci.vehicle.setLaneChangeMode(v_id, 0)
             traci.vehicle.setSpeedMode(v_id, 0)
@@ -68,4 +79,4 @@ class Event:
                 traci.vehicle.setLaneChangeMode(accident_vehicle, 1621)
                 traci.vehicle.setSpeedMode(accident_vehicle, 31)
                 traci.vehicle.setSpeed(accident_vehicle, -1)
-                self.accident_object.remove(accident_vehicle)
+                del self.accident_object[index_accident]
