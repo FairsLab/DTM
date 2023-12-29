@@ -1,9 +1,18 @@
 import traci
 import numpy as np
 from datatype import PersonalData, TradingData
+from typing import TypedDict
+from ..env.gen_event import Event
 
 
-def Update_Cars_info(global_context):
+class TypeGlobalContext(TypedDict):
+    vehicles: dict[str, "SumoVehicle"]  # 车辆id访问对应的类
+    event: Event  # 通过访问Event里的成员属性例如:accident_position等来得到对应event的信息
+    step: int  # 当前时间
+
+
+# 更新车辆信息, 之后计算用
+def Update_Cars_info(global_context: TypeGlobalContext):
     vids = traci.vehicle.getIDList()
     # print(vids)
     for vid in vids:
@@ -15,9 +24,12 @@ def Update_Cars_info(global_context):
         if global_context["vehicles"][vid].vtype == "human":
             continue
         global_context["vehicles"][vid].update_info(global_context["step"])
+        # 更新车辆当前
+
+# 对每辆车计算看到的车数量, 并直接更新到对应的车辆中
 
 
-def Calc_traffic_flow(global_context):
+def Calc_traffic_flow(global_context: TypeGlobalContext):
     vids = traci.vehicle.getIDList()
 
     for vid in vids:  # 这个地方还可以优化 但比较麻烦
@@ -33,10 +45,12 @@ def Calc_traffic_flow(global_context):
                 if road not in res.keys():
                     res[road] = 0
                 res[road] += 1
-        global_context["vehicles"][vid].traffic_flow = res  # simple version
+        # simple version
+        global_context["vehicles"][vid].update_traffic_flow(res)
 
 
-def Calc_nearby_accident(global_context):
+# 每辆车判断一下是否看到车祸信息
+def Calc_nearby_accident(global_context: TypeGlobalContext):
     vids = traci.vehicle.getIDList()
     for vid in vids:
         if global_context["vehicles"][vid].vtype == "human":
@@ -57,14 +71,17 @@ def Calc_nearby_accident(global_context):
                     "traded": False
                 }
 
+# 判断哪些车辆需要进入交易(距离下一个信号灯足够近)
 
-def start_trade(global_context):  # 判断哪些车辆需要进入交易(距离下一个信号灯足够近)
+
+def start_trade(global_context: TypeGlobalContext):
     vids = traci.vehicle.getIDList()
     for vid in vids:
         if traci.vehicle.getTypeID(vid) == "human":
             continue
         if traci.vehicle.getNextTLS(vid)[0][2] < global_context["range"]:
             pass  # start trade
+        # TODO: 这里应该是一个发起交易 读取各方信息的函数
 
 
 class SumoVehicle:
