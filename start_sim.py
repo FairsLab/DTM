@@ -18,7 +18,8 @@ from env.generate_sumo import GenSumo
 from env.gen_event import Event
 from control.signal_control import SignalControl
 from data_trade.data_trade import DataTrade
-from data_trade.traci_calculation import Update_Cars_info, Calc_nearby_accident, Calc_traffic_flow
+from data_trade.traci_calculation import Update_Cars_info, Calc_nearby_accident, Calc_traffic_flow, GlobalContext
+from datatype import *
 
 
 class SimTraci:
@@ -39,9 +40,9 @@ class SimTraci:
         self.gen_path = kwargs['network']
         # event data
         self.event = kwargs['event']
-        self.global_context = {}
-        self.global_context["vehicles"] = {}
-        self.global_context["range"] = kwargs["visibility"]
+        self.global_context = GlobalContext()
+        self.global_context.vehicles = {}
+        self.global_context.visibility = kwargs["visibility"]
         # network settings for a random network
         self.network_setting = kwargs['network_setting']
         # simulation settings
@@ -51,22 +52,22 @@ class SimTraci:
 
     def __sumo_run(self, **kwargs):
         event = kwargs.get('event', None)
-        self.global_context["event"] = event
+        self.global_context.event = event
         trade_register = kwargs.get('trade', None)
         controlled_signal = kwargs.get('control', None)
         while traci.simulation.getMinExpectedNumber() > 0:
             traci.simulationStep()
             # pdb.set_trace()
-            self.global_context["step"] = self.sim_step
+            self.global_context.step = self.sim_step
             if self.sim_step % 150 == 0:
                 Update_Cars_info(self.global_context)
                 if self.sim_step % 150 == 0:
                     Calc_nearby_accident(self.global_context)
                     Calc_traffic_flow(self.global_context)
                     if self.sim_step % 150 == 0:
-                        for vid in self.global_context["vehicles"].keys():
+                        for vid in self.global_context.vehicles.keys():
 
-                            x = self.global_context["vehicles"][vid].get_trading_data(
+                            x = self.global_context.vehicles[vid].get_trading_data(
                                 self.global_context)
                             if x is not None:
                                 print(x)
