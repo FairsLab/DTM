@@ -45,3 +45,4 @@ simulation_option = {'generate_net': generate_net,
                      'trading': trading_option,
                      'gui': gui,
                      'graph': graph_plot}
+vehicle_visibility = 30

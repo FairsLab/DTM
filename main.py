@@ -15,11 +15,12 @@ def main():
                          option=global_var.simulation_option,  # simulation option
                          event=global_var.v_accident,  # accident generate option
                          network_setting=global_var.network_settings,  # generate network settings
-                         simulation_setting=global_var.simulation_settings)  # simulation settings
+                         simulation_setting=global_var.simulation_settings,
+                         visibility=global_var.vehicle_visibility,
+                         )  # simulation settings
     sim_start.sim_run()
 
 
 # 按间距中的绿色按钮以运行脚本。
 if __name__ == '__main__':
     main()
-

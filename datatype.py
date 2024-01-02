@@ -3,6 +3,16 @@ from typing import Dict, List
 
 
 @dataclass
+class AccidentData:
+    accident_id: str
+    accident_location: str
+    time_to_trading_point: str
+    distance_to_traing_point: str
+    accident_severity: str
+    traffic_flow: Dict[str, List[int]]  # key: 道路ID  value: 历史观测到的车辆数
+
+
+@dataclass
 class PersonalData:
     location: List[int] = field(default_factory=list)  # 位置，主要用于 Vehicle
     current_traffic_state: str = None  # 当前交通状态，主要用于 Controller
