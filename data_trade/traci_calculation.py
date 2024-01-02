@@ -128,17 +128,9 @@ class SumoVehicle:
             traffic_flow=self.traffic_flow,
         )
 
-        # {
-        #     "Accident_Id": self.accident[accident_id],
-        #     "Accident_Location": self.accident[accident_id]["Accident_Location"],
-        #     "Time_To_Trading_Point": str((global_context.step-self.accident[accident_id]["accident_time"])/10)+"s",
-        #     "Distance_To_Trading_Point": str(np.linalg.norm(self.accident[accident_id]["Accident_Position"]-np.array(self.position)))+"m",
-        #     "Accident_Severity": "high",
-        #     # 目前是一个字典, 键是道路ID ,值是一个list表示每个观测时刻看到的车辆数(每次进入新的道路刷新)
-        #     "Traffic_Flow": self.traffic_flow,
-        # }
         # 因为还没设定好交易完成后的数据格式, 这里历史平均价格本来应该从history_trading_data计算出来的
         # 还有就是如果当前是第一次交易那平均价格应该也是None才对
+        # TODO 定好交易完成的数据后计算历史平均价格
         return TradingData(current_token=self.currancy,
                            history_average_price=None, trading_history=self.history_trading_data, accident_info=accident_info)
 

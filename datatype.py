@@ -9,10 +9,7 @@ class AccidentData:
     time_to_trading_point: str
     distance_to_traing_point: str
     accident_severity: str
-    traffic_flow: Dict[str, List[int]]
-
-
-
+    traffic_flow: Dict[str, List[int]]  # key: 道路ID  value: 历史观测到的车辆数
 
 
 @dataclass
