@@ -25,7 +25,8 @@ class MetaActor:
 
 
 class Vehicle(MetaActor):
-    def __init__(self, personal_data, trading_data, preference) -> None:
+    def __init__(self, actor_id, personal_data, trading_data, preference) -> None:
+        self.actor_id = actor_id
         self.personal_data = personal_data
         self.trading_data = trading_data
         self.preference = preference
@@ -61,6 +62,12 @@ class Vehicle(MetaActor):
 
 
 class Controller(MetaActor):
+    def __init__(self, actor_id, personal_data, trading_data, preference) -> None:
+        self.actor_id = actor_id
+        self.personal_data = personal_data
+        self.trading_data = trading_data
+        self.preference = preference
+
     def decide_offer(self, message):
         # 整合输入数据
         input_data = {

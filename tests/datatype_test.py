@@ -63,7 +63,8 @@ controller_trading_data = TradingData(
 # 信号控制器的偏好设置
 controller_preference = Preference(
     trading_purpose="提升交通效率",
-    current_budget=15.0,
+    expected_price=15.0,
+    cost = 1,  # TODO 待修改
     skepticism=True
 )
 

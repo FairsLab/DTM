@@ -30,7 +30,7 @@ class TradingData:
 @dataclass
 class Preference:
     trading_purpose: str
-    expected_price: float
+    expected_price: float  # current_budget for controller
     cost: float
     skepticism: bool = None  # 对数据保留怀疑态度，主要用于 Controller
 
