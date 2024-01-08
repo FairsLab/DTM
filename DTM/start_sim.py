@@ -14,12 +14,18 @@ try:
 except ImportError:
     sys.exit("Please declare the environment variable 'SUMO_HOME'")
 import traci
-from env.generate_sumo import GenSumo
-from env.gen_event import Event
-from control.signal_control import SignalControl
-from data_trade.data_trade import DataTrade
-from data_trade.traci_calculation import Update_Cars_info, Calc_nearby_accident, Calc_traffic_flow, GlobalContext
-from datatype import *
+from pathlib import Path
+# 获取当前脚本所在目录的父目录（假设它是项目根目录），将项目根目录添加到 sys.path，导入项目模块
+root_dir = Path(__file__).parent.parent.resolve()
+if str(root_dir) not in sys.path:
+    sys.path.append(str(root_dir))
+
+from DTM.env.generate_sumo import GenSumo
+from DTM.env.gen_event import Event
+from DTM.control.signal_control import SignalControl
+from DTM.data_trade.data_trade import DataTrade
+from DTM.data_trade.traci_calculation import Update_Cars_info, Calc_nearby_accident, Calc_traffic_flow, GlobalContext
+from typings.datatype import *
 
 
 class SimTraci:

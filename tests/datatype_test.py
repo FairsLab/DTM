@@ -1,16 +1,10 @@
-from pathlib import Path
 import sys
-
-# 获取当前脚本所在目录的父目录（假设它是项目根目录）
+from pathlib import Path
+# 获取当前脚本所在目录的父目录（假设它是项目根目录），将项目根目录添加到 sys.path，导入项目模块
 root_dir = Path(__file__).parent.parent.resolve()
-
-# 将项目根目录添加到 sys.path
 if str(root_dir) not in sys.path:
     sys.path.append(str(root_dir))
-
-# 现在可以进行导入
 from typings.datatype import PersonalData, TradingData, Preference, Offer, Decision
-
 from DTM.trading import Vehicle, Controller
 
 # 智能车的个人数据
