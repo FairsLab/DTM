@@ -1,4 +1,3 @@
-
 import sys
 import openai
 import logging

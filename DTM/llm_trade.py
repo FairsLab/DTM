@@ -32,14 +32,14 @@ openai_login()
 
 def extract_first_number(text):
     # 使用正则表达式匹配第一个数字及其后的文本
-    match = re.search(r'\d+', text)
+    match = re.search(r"\d+", text)
 
     if match:
         # 提取第一个数字
         first_number = match.group()
 
         # 提取后面的文本，包括可能的换行符
-        remaining_text = text[match.end():].strip()
+        remaining_text = text[match.end() :].strip()
 
         return first_number, remaining_text
     else:
@@ -87,8 +87,16 @@ class Agent:
         else:
             instruction += "Below is the pricing both parties used to generate during the negotiation process and the reasoning behind it:\n"
             for row in history:
-                instruction += row["name"] + "(" + row["role"] + "):\nprice: " + \
-                    row["price"] + "\nreason:" + row["reason"] + "\n\n"
+                instruction += (
+                    row["name"]
+                    + "("
+                    + row["role"]
+                    + "):\nprice: "
+                    + row["price"]
+                    + "\nreason:"
+                    + row["reason"]
+                    + "\n\n"
+                )
             instruction += "You rejected the other side's latest pricing, now you need to come up with a new pricing and explain the reason to your counterparty.\n"
 
         instruction += """
@@ -106,8 +114,13 @@ class Agent:
         logging.info(txt)
         res = dict()
         res["role"] = self.name
-        ret = {"usage": response["usage"].total_tokens, "name": self.name,
-               "role": self.role, "price": price, "reason": reason}
+        ret = {
+            "usage": response["usage"].total_tokens,
+            "name": self.name,
+            "role": self.role,
+            "price": price,
+            "reason": reason,
+        }
 
         logging.info(ret)
         return ret
@@ -141,8 +154,16 @@ class Agent:
 
         instruction += "Below is the pricing both parties used to generate during the negotiation process and the reasoning behind it:\n"
         for row in history:
-            instruction += row["name"] + "(" + row["role"] + "):\nprice: " + \
-                row["price"] + "\nreason:" + row["reason"] + "\n\n"
+            instruction += (
+                row["name"]
+                + "("
+                + row["role"]
+                + "):\nprice: "
+                + row["price"]
+                + "\nreason:"
+                + row["reason"]
+                + "\n\n"
+            )
 
         instruction += "You now need to decide whether to accept the last pricing and justification offered by the other party? Output 1 means yes, Output 2 means no and re-propose a price you can accept, Output 3 means no and withdraw from the negotiation. Please only output the corresponding number."
 
@@ -257,18 +278,19 @@ def _demo():
         "alice",
         personality="You have enough time to negotiate, and you are very eager to maximize the benefits.",
     )
-    A = Agent('car', 'alice',
-              personality="You've been running out of money lately.")
-    B = Agent("center", "Bob",
-              "You have enough time to negotiate, and you are very eager to maximize the benefits.")
+    A = Agent("car", "alice", personality="You've been running out of money lately.")
+    B = Agent(
+        "center",
+        "Bob",
+        "You have enough time to negotiate, and you are very eager to maximize the benefits.",
+    )
 
     cnt = 0
     data_description = "A road condition information about section 'A01' five minutes ago The cost of collecting this information is approximately 137."
     history = []
     f = 0
     while True:
-        tmp = A.evaluate(
-            data_description=data_description, history=history)
+        tmp = A.evaluate(data_description=data_description, history=history)
         logging.info(tmp)
         history.append(tmp)
 
@@ -281,7 +303,7 @@ def _demo():
 
         A, B = B, A  # swap
 
-        f = 1-f
+        f = 1 - f
 
         cnt += 1
         if cnt == 6:

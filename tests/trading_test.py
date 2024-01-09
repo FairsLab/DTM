@@ -6,7 +6,6 @@ from DTM.trading import Vehicle
 from typings.datatype import *
 
 
-
 def openai_login(azure=False):
     load_dotenv()
     if azure is True:
@@ -22,7 +21,7 @@ def openai_login(azure=False):
 
 openai_login(azure=True)
 
-actor_id = 'vehicle_001'
+actor_id = "vehicle_001"
 
 # 智能车的个人数据
 vehicle_personal_data = PersonalData(location=[10, 20])
@@ -45,6 +44,8 @@ vehicle_preference = Preference(
     trading_purpose="获得最大化收益", expected_price=10.0, cost=1.0
 )
 
-vehicle_1 = Vehicle(actor_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference)
+vehicle_1 = Vehicle(
+    actor_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference
+)
 
 print(vehicle_1.propose_offer())
