@@ -1,17 +1,7 @@
 # 用于测试函数
 import openai
-import logging
-import re
-import json
-import sys
 import os
 from dotenv import load_dotenv
-import pickle
-from pathlib import Path
-# 获取当前脚本所在目录的父目录（假设它是项目根目录），将项目根目录添加到 sys.path，导入项目模块
-root_dir = Path(__file__).parent.parent.resolve()
-if str(root_dir) not in sys.path:
-    sys.path.append(str(root_dir))
 from DTM.trading import Vehicle
 from typings.datatype import *
 
