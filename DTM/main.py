@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
-import global_var
-from start_sim import SimTraci
+import DTM.global_var
+from DTM.start_sim import SimTraci
 
 
 def main():
@@ -12,11 +12,11 @@ def main():
         os.mkdir(network_dir)
     #  simulation start
     sim_start = SimTraci(network=network_dir,  # network path
-                         option=global_var.simulation_option,  # simulation option
-                         event=global_var.v_accident,  # accident generate option
-                         network_setting=global_var.network_settings,  # generate network settings
-                         simulation_setting=global_var.simulation_settings,
-                         visibility=global_var.vehicle_visibility,
+                         option=DTM.global_var.simulation_option,  # simulation option
+                         event=DTM.global_var.v_accident,  # accident generate option
+                         network_setting=DTM.global_var.network_settings,  # generate network settings
+                         simulation_setting=DTM.global_var.simulation_settings,
+                         visibility=DTM.global_var.vehicle_visibility,
                          )  # simulation settings
     sim_start.sim_run()
 

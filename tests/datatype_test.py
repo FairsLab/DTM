@@ -1,5 +1,5 @@
-from datatype import PersonalData, TradingData, Preference, Offer, Decision
-from trading import Vehicle, Controller
+from typings.datatype import PersonalData, TradingData, Preference, Offer, Decision
+from DTM.trading import Vehicle, Controller
 
 # 智能车的个人数据
 vehicle_personal_data = PersonalData(
@@ -51,7 +51,8 @@ controller_trading_data = TradingData(
 # 信号控制器的偏好设置
 controller_preference = Preference(
     trading_purpose="提升交通效率",
-    current_budget=15.0,
+    expected_price=15.0,
+    cost = 1,  # TODO 待修改
     skepticism=True
 )
 

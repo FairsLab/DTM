@@ -14,12 +14,14 @@ try:
 except ImportError:
     sys.exit("Please declare the environment variable 'SUMO_HOME'")
 import traci
-from env.generate_sumo import GenSumo
-from env.gen_event import Event
-from control.signal_control import SignalControl
-from data_trade.data_trade import DataTrade
-from data_trade.traci_calculation import Update_Cars_info, Calc_nearby_accident, Calc_traffic_flow, GlobalContext
-from datatype import *
+
+
+from DTM.env.generate_sumo import GenSumo
+from DTM.env.gen_event import Event
+from DTM.control.signal_control import SignalControl
+from DTM.data_trade.data_trade import DataTrade
+from DTM.data_trade.traci_calculation import Update_Cars_info, Calc_nearby_accident, Calc_traffic_flow, GlobalContext
+from typings.datatype import *
 
 
 class SimTraci:

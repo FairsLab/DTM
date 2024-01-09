@@ -1,17 +1,10 @@
 # 用于测试函数
-from datatype import *
-import openai
-import logging
-import re
-import json
-from trading import Vehicle
-
-# 导入 openai 库
 import openai
 import os
 from dotenv import load_dotenv
-import pickle
-import json
+from DTM.trading import Vehicle
+from typings.datatype import *
+
 
 
 def openai_login(azure=False):
@@ -29,6 +22,7 @@ def openai_login(azure=False):
 
 openai_login(azure=True)
 
+actor_id = 'vehicle_001'
 
 # 智能车的个人数据
 vehicle_personal_data = PersonalData(location=[10, 20])
@@ -51,6 +45,6 @@ vehicle_preference = Preference(
     trading_purpose="获得最大化收益", expected_price=10.0, cost=1.0
 )
 
-vehicle_1 = Vehicle(vehicle_personal_data, vehicle_trading_data, vehicle_preference)
+vehicle_1 = Vehicle(actor_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference)
 
 print(vehicle_1.propose_offer())

@@ -1,11 +1,10 @@
 import traci
 import numpy as np
-from datatype import PersonalData, TradingData, AccidentData
-from typing import TypedDict
-from env.gen_event import Event
+import sys
+from typing import TypedDict, Dict, List
 from dataclasses import dataclass, field
-from typing import Dict, List
-
+from typings.datatype import PersonalData, TradingData, AccidentData
+from DTM.env.gen_event import Event
 
 @dataclass
 class GlobalContext:
