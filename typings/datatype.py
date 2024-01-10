@@ -50,10 +50,10 @@ Offer = [
                     "type": "number",
                     "description": "the proposed price of the data",  # "12 dollars"
                 },
-                "amount": {
-                    "type": "number",
-                    "description": "the amount of traded data",
-                },
+                # "amount": {
+                #     "type": "number",
+                #     "description": "the amount of traded data",
+                # },
                 "reason": {
                     "type": "string",
                     "description": "the reason to convince controller to buy the data",

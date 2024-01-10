@@ -1,25 +1,9 @@
 # 用于测试函数
 import openai
-import os
-from dotenv import load_dotenv
 from DTM.trading import *
 from typings.datatype import *
 
 
-def openai_login(azure=False):
-    load_dotenv()
-    if azure is True:
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        openai.api_base = os.getenv("OPENAI_ENDPOINT")
-        openai.api_type = "azure"
-        openai.api_version = (
-            "2023-07-01-preview"  # 使用function_calling 有特定version需求，且gpt需要部署为0613版本
-        )
-    else:
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-
-
-openai_login(azure=True)
 
 # 智能车的个人数据
 vehicle_id = "vehicle_001"
@@ -63,11 +47,23 @@ vehicle_1 = Vehicle(
     vehicle_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference
 )
 
-offer_context = vehicle_1.propose_offer()
-print(offer_context)
 
-controller_1 = Controller(
-  controller_id, controller_personal_data, controller_trading_data, controller_preference  
-)
-decision_context = controller_1.decide_offer(offer_context)
-print(decision_context)
+if __name__ == "__main__":
+    openai_login(azure=True) 
+    offer_context = vehicle_1.propose_offer()
+    print(offer_context)
+
+    controller_1 = Controller(
+    controller_id, controller_personal_data, controller_trading_data, controller_preference  
+    )
+    decision_context = controller_1.decide_offer(offer_context)
+    print(decision_context)
+    
+    # 测试提取函数
+    extracted_offer = extract_offer(offer_context)
+    print("Extracted Offer: ", extracted_offer)
+
+    extracted_decision = extract_decision(decision_context)
+    print("Extracted Decision: ", extracted_decision)
+
+

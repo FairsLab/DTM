@@ -1,9 +1,25 @@
 import sys
 import openai
+import os
 import logging
 import re
 import json
+from dotenv import load_dotenv
 from typings.datatype import PersonalData, TradingData, Preference, Offer, Decision
+
+
+def openai_login(azure=False):
+    load_dotenv()
+    if azure is True:
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        openai.api_base = os.getenv("OPENAI_ENDPOINT")
+        openai.api_type = "azure"
+        openai.api_version = (
+            "2023-07-01-preview"  # 使用function_calling 有特定version需求，且gpt需要部署为0613版本
+        )
+    else:
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 
 class MetaActor:
@@ -91,49 +107,48 @@ def format_input_for_openai(input_data):
     return str(input_data)
 
 
-def extract_first_number(text):
-    # 使用正则表达式匹配第一个数字及其后的文本
-    match = re.search(r"\d+", text)
-    if match:
-        # 提取第一个数字
-        first_number = match.group()
-        # 提取后面的文本，包括可能的换行符
-        remaining_text = text[match.end() :].strip()
-        return first_number, remaining_text
-    else:
-        # 如果没有找到数字，返回None
-        return None, text
+# def extract_first_number(text):
+#     # 使用正则表达式匹配第一个数字及其后的文本
+#     match = re.search(r"\d+", text)
+#     if match:
+#         # 提取第一个数字
+#         first_number = match.group()
+#         # 提取后面的文本，包括可能的换行符
+#         remaining_text = text[match.end() :].strip()
+#         return first_number, remaining_text
+#     else:
+#         # 如果没有找到数字，返回None
+#         return None, text
 
 
-# TODO 待修改：提取response里面的内容用于保存
-def process_response(response, actor):
-    # 提取文本内容
-    txt = response.choices[0].message.content
-    logging.debug(response)
+# 提取response里面的内容用于保存
+def extract_offer(offer_context):
+    # 解析 JSON 字符串
+    arguments = json.loads(offer_context["function_call"]["arguments"])
+    # 提取信息
+    data_description = arguments.get("data_description", "")
+    price = arguments.get("price", 0)
+    offer_reason = arguments.get("reason", "")
 
-    # 提取价格和理由
-    price, reason = extract_first_number(txt)
-    logging.info(txt)
-
-    # 构建结果字典
-    result = {
-        "actor_name": actor.name,
-        "actor_role": actor.role,
-        "response_text": txt,
+    extracted_info = {
+        "data_description": data_description,
         "price": price,
-        "reason": reason,
-        "usage_tokens": response.usage.total_tokens,
+        "offer_reason": offer_reason
     }
+    return extracted_info
 
-    logging.info(result)
-    return result
+def extract_decision(decision_context):
+    # 解析 JSON 字符串
+    arguments = json.loads(decision_context["function_call"]["arguments"])
+    # 提取信息
+    decision = arguments.get("decision", False)
+    decision_reason = arguments.get("reason", "")
 
-
-# TODO 根据 decision_message 决定是否结束交易
-def judge(decision_message):
-    # 这里可以根据您的需求来编写具体的逻辑
-    # 例如，可以检查决策消息是否包含某些关键字或条件
-    return "deal" in decision_message.lower() or "no deal" in decision_message.lower()
+    extracted_info = {
+        "decision": decision,
+        "reason": decision_reason
+    }
+    return extracted_info
 
 
 # TODO
