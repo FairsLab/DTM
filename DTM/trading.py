@@ -56,32 +56,33 @@ class Controller(MetaActor):
         self.trading_data = trading_data
         self.preference = preference
 
-    def decide_offer(self, message):
-        # 整合输入数据
+    def decide_offer(self):
+    # 整合输入数据
         input_data = {
             "message": message,
             "personal_data": self.personal_data,
             "trading_data": self.trading_data,
             "preference": self.preference,
         }
-
         # 转换input_data为适合openai.ChatCompletion.create()的格式
         prompt = format_input_for_openai(input_data)
-
-        # 调用openai.ChatCompletion.create()来生成决策
+        # 调用openai.ChatCompletion.create()来生成提议
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "system", "content": prompt}],
-            max_tokens=1,
-            temperature=0.1,
+            engine="gpt35",  # 部署名
+            messages=[{"role": "user", "content": prompt}],
+            functions=Decision,
+            function_call="auto",
+            # max_tokens=1,
+            # temperature=0.1,
             # 其他适当的参数
         )
-        # 从response中提取新的message
-        new_message = response.choices[0].message
 
-        # 返回新的message给vehicle
-        return new_message
+        # 从response中提取message
+        message = response.choices[0].message
+        # TODO 保存message为json？
 
+        # 返回message给controller
+        return message
 
 def format_input_for_openai(input_data):
     # 格式化input_data为字符串，适用于openai.ChatCompletion.create()
@@ -132,3 +133,19 @@ def judge(decision_message):
     # 这里可以根据您的需求来编写具体的逻辑
     # 例如，可以检查决策消息是否包含某些关键字或条件
     return "deal" in decision_message.lower() or "no deal" in decision_message.lower()
+
+
+# TODO
+def _trade():
+    # vehicle_1 实例化
+    # controller 实例化
+    
+    if trading_history.empty:
+        pass
+    else:
+        pass
+    
+    # propose offer
+    # decision offer
+    
+    

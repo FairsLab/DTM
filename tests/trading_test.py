@@ -2,7 +2,7 @@
 import openai
 import os
 from dotenv import load_dotenv
-from DTM.trading import Vehicle
+from DTM.trading import *
 from typings.datatype import *
 
 
@@ -21,10 +21,13 @@ def openai_login(azure=False):
 
 openai_login(azure=True)
 
-actor_id = "vehicle_001"
-
 # 智能车的个人数据
+vehicle_id = "vehicle_001"
 vehicle_personal_data = PersonalData(location=[10, 20])
+
+controller_id = 'controller_1'
+controller_personal_data = PersonalData(location=[5, 20])
+
 
 # 智能车的交易数据
 vehicle_trading_data = TradingData(
@@ -39,13 +42,32 @@ vehicle_trading_data = TradingData(
     },
 )
 
+# controller的交易数据
+controller_trading_data = TradingData(
+    current_token= 100,
+    history_average_price= 10,
+    accident_info = None    
+)
+
 # 智能车的偏好设置
 vehicle_preference = Preference(
+    trading_purpose="获得最大化收益", expected_price=12.0, cost=1.0
+)
+
+# controller的偏好设置
+controller_preference = Preference(
     trading_purpose="获得最大化收益", expected_price=10.0, cost=1.0
 )
 
 vehicle_1 = Vehicle(
-    actor_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference
+    vehicle_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference
 )
 
-print(vehicle_1.propose_offer())
+offer_context = vehicle_1.propose_offer()
+print(offer_context)
+
+controller_1 = Controller(
+  controller_id, controller_personal_data, controller_trading_data, controller_preference  
+)
+decision_context = controller_1.decide_offer(offer_context)
+print(decision_context)
