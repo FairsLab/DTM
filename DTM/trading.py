@@ -42,7 +42,6 @@ class Vehicle(MetaActor):
             "trading_data": self.trading_data,
             "preference": self.preference,
         }
-        # function_call = {"function_name": "generate_offer"}
         # 转换input_data为适合openai.ChatCompletion.create()的格式
         prompt = format_input_for_openai(input_data)
 
@@ -54,12 +53,10 @@ class Vehicle(MetaActor):
             function_call="auto",
             # max_tokens=1,
             # temperature=0.1,
-            # 其他适当的参数
         )
 
         # 从response中提取message
         message = response.choices[0].message
-        # TODO 保存message为json？
 
         # 返回message给controller
         return message
@@ -80,7 +77,6 @@ class Controller(MetaActor):
             "trading_data": self.trading_data,
             "preference": self.preference,
         }
-        # function_call = {"function_name": "decide_offer"}
         # 转换input_data为适合openai.ChatCompletion.create()的格式
         prompt = format_input_for_openai(input_data)
         # 调用openai.ChatCompletion.create()来生成提议
@@ -91,7 +87,6 @@ class Controller(MetaActor):
             function_call="auto",
             # max_tokens=1,
             # temperature=0.1,
-            # 其他适当的参数
         )
 
         # 从response中提取message
@@ -135,6 +130,8 @@ def extract_offer(offer_context):
         "price": price,
         "offer_reason": offer_reason
     }
+    # TODO 保存数据
+
     return extracted_info
 
 def extract_decision(decision_context):
@@ -151,17 +148,13 @@ def extract_decision(decision_context):
     return extracted_info
 
 
-# TODO
-def _trade():
+# TODO 在data_trade里面调用上述函数
+# def _trade():
     # vehicle_1 实例化
     
     # controller 实例化
     
-    if trading_history.empty:
-        pass
-    else:
-        pass
-    
+    # 判断空值
     # propose offer
     # decision offer
     
