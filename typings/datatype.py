@@ -67,12 +67,34 @@ Offer = [
 # "可以为你带来更高的交通效率和安全，提高交通流畅度，从而减少事故发生的可能性，并且对城市的交通管理有积极的影响。"
 
 
+# Decision = [
+#     {
+#         "decision": "y",
+#         "reason": "我决定接受这笔交易，因为交通事故信息对于改善交通效率非常重要。根据我的personal data，我预测通过更好的交通状态可以获得50美元的收益。虽然价格略高于我的历史平均价格（10美元），但考虑到数据的重要性和潜在的效益，我认为这是一笔有利可图的交易。同时，我会在交叉验证过程中谨慎使用这些数据，以最大化我的token数量。",
+#     }
+# ]
+
 Decision = [
     {
-        "decision": "y",
-        "reason": "我决定接受这笔交易，因为交通事故信息对于改善交通效率非常重要。根据我的personal data，我预测通过更好的交通状态可以获得50美元的收益。虽然价格略高于我的历史平均价格（10美元），但考虑到数据的重要性和潜在的效益，我认为这是一笔有利可图的交易。同时，我会在交叉验证过程中谨慎使用这些数据，以最大化我的token数量。",
+        "name": "offer_dicision",
+        "description": "decide whether to take the offer based on the proposed offer context and the information I have",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "decision": {
+                    "type": "boolean",
+                    "description": "The decision of say yes or no to the offer",
+                },
+                "reason": {
+                    "type": "string",
+                    "description": "the reason why make this offer decision",  # "12 dollars"
+                },
+            },
+        },
+        "required": ["content"],
     }
 ]
+
 #     vehicle_id: str
 #     description: str
 #     price: float

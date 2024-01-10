@@ -26,7 +26,7 @@ class Vehicle(MetaActor):
             "trading_data": self.trading_data,
             "preference": self.preference,
         }
-        function_call = {"function_name": "generate_offer"}
+        # function_call = {"function_name": "generate_offer"}
         # 转换input_data为适合openai.ChatCompletion.create()的格式
         prompt = format_input_for_openai(input_data)
 
@@ -56,14 +56,15 @@ class Controller(MetaActor):
         self.trading_data = trading_data
         self.preference = preference
 
-    def decide_offer(self):
+    def decide_offer(self, offer_context):
     # 整合输入数据
         input_data = {
-            "message": message,
+            "message": offer_context,
             "personal_data": self.personal_data,
             "trading_data": self.trading_data,
             "preference": self.preference,
         }
+        # function_call = {"function_name": "decide_offer"}
         # 转换input_data为适合openai.ChatCompletion.create()的格式
         prompt = format_input_for_openai(input_data)
         # 调用openai.ChatCompletion.create()来生成提议
@@ -138,6 +139,7 @@ def judge(decision_message):
 # TODO
 def _trade():
     # vehicle_1 实例化
+    
     # controller 实例化
     
     if trading_history.empty:
