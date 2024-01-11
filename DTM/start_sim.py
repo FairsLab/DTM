@@ -7,6 +7,7 @@ import os
 
 # import pdb
 import sys
+from tests.trading_test import controller_1
 
 try:
     tools = os.path.join(os.environ["SUMO_HOME"], "tools")
@@ -51,6 +52,8 @@ class SimTraci:
         self.global_context = GlobalContext()
         self.global_context.vehicles = {}
         self.global_context.visibility = kwargs["visibility"]
+        print("*"*30, kwargs["visibility"])
+        print("*"*30, kwargs["visibility"])
         # network settings for a random network
         self.network_setting = kwargs["network_setting"]
         # simulation settings
@@ -63,16 +66,18 @@ class SimTraci:
         self.global_context.event = event
         trade_register = kwargs.get("trade", None)
         controlled_signal = kwargs.get("control", None)
+        datatrade = DataTrade(controller_1)
         while traci.simulation.getMinExpectedNumber() > 0:
             traci.simulationStep()
             # pdb.set_trace()
             self.global_context.step = self.sim_step
-            if self.sim_step % 150 == 0:
+            if self.sim_step % 300 == 0:
                 Update_Cars_info(self.global_context)
-                if self.sim_step % 150 == 0:
+                if self.sim_step % 300 == 0:
                     Calc_nearby_accident(self.global_context)
                     Calc_traffic_flow(self.global_context)
-                    if self.sim_step % 150 == 0:
+                    datatrade.start_trade(self.global_context)
+                    if self.sim_step % 300 == 0:
                         for vid in self.global_context.vehicles.keys():
 
                             x = self.global_context.vehicles[vid].get_trading_data(

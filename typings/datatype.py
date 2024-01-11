@@ -3,18 +3,32 @@ from typing import Dict, List
 
 
 @dataclass
+class GlobalContext:
+    vehicles: Dict[str, any] = None  # 车辆id访问对应的类
+    event: any = None  # 通过访问Event里的成员属性例如:accident_position等来得到对应event的信息
+    step: int = None  # 当前时间
+    visibility: float = None  # 可视距离
+
+
+@dataclass
 class AccidentData:
     accident_id: str
-    accident_location: str
+    accident_road_id: str  # 车道id  e.g."A1A0"
+    accident_position: List[float]  # 事故的经纬度位置
     time_to_trading_point: str
-    distance_to_traing_point: str
+    distance_to_traing_point: str  # 事故距离当前交易点的直线距离
     accident_severity: str
     traffic_flow: Dict[str, List[int]]  # key: 道路ID  value: 历史观测到的车辆数
 
 
 @dataclass
 class PersonalData:
-    location: List[int] = field(default_factory=list)  # 位置，主要用于 Vehicle
+    road_id: str  # 车辆当前所在位置车道id  e.g."A1A0"
+    position: List[float]  # 车辆的经纬度位置
+
+
+@dataclass
+class ControllerPersonalData:
     current_traffic_state: str = None  # 当前交通状态，主要用于 Controller
     predicted_income: float = None  # 预测收入，主要用于 Controller
 
@@ -28,10 +42,22 @@ class TradingData:
 
 
 @dataclass
+class TradingHistoryData:
+    current_token: float
+    history_average_price: float
+    vehicle_id: str
+    controller_id: str
+    proposed_price: float
+    is_success: bool
+    trading_time: str
+    accident_info: Dict[str, any] = None  # 事故信息，主要用于 Vehicle
+
+
+@dataclass
 class Preference:
     trading_purpose: str
     expected_price: float  # current_budget for controller
-    cost: float
+    cost: float  # 发起交易时, 车辆要花费的货币
     skepticism: bool = None  # 对数据保留怀疑态度，主要用于 Controller
 
 

@@ -4,7 +4,8 @@
 num_intersection = 2  # NxN block network
 length = 500  # length of each stretch
 num_lane = 3  # number of lanes
-network_settings = {"num_int": num_intersection, "length": length, "num_lane": num_lane}
+network_settings = {"num_int": num_intersection,
+                    "length": length, "num_lane": num_lane}
 
 """simulation settings"""
 period_gen = 300  # generate time
@@ -40,7 +41,7 @@ v_accident = {
 generate_net = True
 control_option = True
 trading_option = False
-gui = True
+gui = False
 graph_plot = True
 simulation_option = {
     "generate_net": generate_net,

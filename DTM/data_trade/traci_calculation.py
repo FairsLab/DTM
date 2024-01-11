@@ -3,8 +3,10 @@ import numpy as np
 import sys
 from typing import TypedDict, Dict, List
 from dataclasses import dataclass, field
-from typings.datatype import PersonalData, TradingData, AccidentData
+from typings.datatype import PersonalData, TradingData, AccidentData, GlobalContext
 from DTM.env.gen_event import Event
+from DTM.trading import Vehicle
+from tests.trading_test import vehicle_preference
 
 
 @dataclass
@@ -44,7 +46,8 @@ def Calc_traffic_flow(global_context: GlobalContext):
         pos = np.array(global_context.vehicles[vid].position)
         for vid2 in vids:
             # print(global_context["cars"])
-            dis = np.linalg.norm(pos - np.array(traci.vehicle.getPosition(vid2)))
+            dis = np.linalg.norm(
+                pos - np.array(traci.vehicle.getPosition(vid2)))
             if dis < global_context.visibility:
                 road = traci.vehicle.getRoadID(vid2)
                 if road not in res.keys():
@@ -64,7 +67,8 @@ def Calc_nearby_accident(global_context: GlobalContext):
             if eid in global_context.vehicles[vid].accident.keys():
                 continue
             vehicle_position = np.array(global_context.vehicles[vid].position)
-            event_position = np.array(global_context.event.accident_position[eid])
+            event_position = np.array(
+                global_context.event.accident_position[eid])
             if (
                 np.linalg.norm(event_position - vehicle_position)
                 < global_context.visibility
@@ -81,16 +85,6 @@ def Calc_nearby_accident(global_context: GlobalContext):
 # 判断哪些车辆需要进入交易(距离下一个信号灯足够近)
 
 
-def start_trade(global_context: GlobalContext):
-    vids = traci.vehicle.getIDList()
-    for vid in vids:
-        if traci.vehicle.getTypeID(vid) == "human":
-            continue
-        if traci.vehicle.getNextTLS(vid)[0][2] < global_context.visibility:
-            pass  # start trade
-        # TODO: 这里应该是一个发起交易 读取各方信息的函数
-
-
 class SumoVehicle:
     def __init__(self, car_id, init_currancy, vtype):
         self.vtype = vtype
@@ -104,9 +98,10 @@ class SumoVehicle:
         self.position = traci.vehicle.getPosition(self.car_id)
         self.speed = traci.vehicle.getSpeed(self.car_id)
         self.direction = traci.vehicle.getAngle(self.car_id)
-        new_road = traci.vehicle.getRoadID(self.car_id)
-        if not hasattr(self, "road") or not self.road == new_road:
-            self.traffic_flow = {}  # recalculate traffic flow when entering a new road
+        old_road = self.road_id if hasattr(self, "road_id") else "-1"
+        self.road_id = traci.vehicle.getRoadID(self.car_id)
+        if not self.road_id == old_road:
+            self.traffic_flow = {}  # 刷新 traffic flow when entering a new road
 
     def update_traffic_flow(self, traffic_flow: dict):
         for key in traffic_flow.keys():
@@ -122,9 +117,12 @@ class SumoVehicle:
         # 按照trading_test中的格式, 多了一个Accident_id方便以后要用
         accident_info = AccidentData(
             accident_id=self.accident[accident_id],
-            accident_location=self.accident[accident_id]["Accident_Location"],
+            accident_road_id=self.accident[accident_id]["Accident_Location"],
+            accident_position=list(
+                self.accident[accident_id]["Accident_Position"]),
             time_to_trading_point=str(
-                (global_context.step - self.accident[accident_id]["accident_time"]) / 10
+                (global_context.step -
+                 self.accident[accident_id]["accident_time"]) / 10
             )
             + "s",
             distance_to_traing_point=str(
@@ -149,7 +147,7 @@ class SumoVehicle:
         )
 
     def get_personal_data(self, global_context: GlobalContext):
-        return PersonalData(self.position)
+        return PersonalData(self.road_id, self.position)
 
 
 class Controller:
