@@ -8,7 +8,6 @@ from DTM.env.gen_event import Event
 from DTM.trading import Vehicle
 from tests.trading_test import vehicle_preference
 
-<<<<<<< HEAD
 
 @dataclass
 class GlobalContext:
@@ -16,8 +15,6 @@ class GlobalContext:
     event: Event = None  # 通过访问Event里的成员属性例如:accident_position等来得到对应event的信息
     step: int = None  # 当前时间
     visibility: float = None  # 可视距离
-=======
->>>>>>> 11bb6dc (update traci_calculation, datatype, data_trade)
 
 
 def Update_Cars_info(global_context: GlobalContext):

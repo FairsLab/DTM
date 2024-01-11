@@ -5,7 +5,7 @@ import logging
 import re
 import json
 from dotenv import load_dotenv
-from typings.datatype import PersonalData, TradingData, Preference, Offer, Decision
+from typings.datatype import *
 
 
 def openai_login(azure=False):
@@ -19,7 +19,6 @@ def openai_login(azure=False):
         )
     else:
         openai.api_key = os.getenv("OPENAI_API_KEY")
-
 
 
 class MetaActor:
@@ -63,14 +62,14 @@ class Vehicle(MetaActor):
 
 
 class Controller(MetaActor):
-    def __init__(self, actor_id, personal_data, trading_data, preference) -> None:
+    def __init__(self, actor_id, personal_data: ControllerPersonalData, trading_data, preference) -> None:
         self.actor_id = actor_id
         self.personal_data = personal_data
         self.trading_data = trading_data
         self.preference = preference
 
     def decide_offer(self, offer_context):
-    # 整合输入数据
+        # 整合输入数据
         input_data = {
             "message": offer_context,
             "personal_data": self.personal_data,
@@ -96,6 +95,7 @@ class Controller(MetaActor):
         # 返回message给controller
         return message
 
+
 def format_input_for_openai(input_data):
     # 格式化input_data为字符串，适用于openai.ChatCompletion.create()
     # 这里可以根据您的具体需求进行定制
@@ -119,7 +119,9 @@ def format_input_for_openai(input_data):
 # 提取response里面的内容用于保存
 def extract_offer(offer_context):
     # 解析 JSON 字符串
-    arguments = json.loads(offer_context["function_call"]["arguments"])
+    arguments_string = offer_context["function_call"]["arguments"]
+    print("-"*20, arguments_string)
+    arguments = json.loads(arguments_string)
     # 提取信息
     data_description = arguments.get("data_description", "")
     price = arguments.get("price", 0)
@@ -134,9 +136,12 @@ def extract_offer(offer_context):
 
     return extracted_info
 
+
 def extract_decision(decision_context):
     # 解析 JSON 字符串
-    arguments = json.loads(decision_context["function_call"]["arguments"])
+    arguments_string = decision_context["function_call"]["arguments"]
+    print("?"*20, arguments_string)
+    arguments = json.loads(arguments_string)
     # 提取信息
     decision = arguments.get("decision", False)
     decision_reason = arguments.get("reason", "")
@@ -151,11 +156,9 @@ def extract_decision(decision_context):
 # TODO 在data_trade里面调用上述函数
 # def _trade():
     # vehicle_1 实例化
-    
+
     # controller 实例化
-    
+
     # 判断空值
     # propose offer
     # decision offer
-    
-    

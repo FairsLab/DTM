@@ -7,6 +7,7 @@ from typings.datatype import PersonalData, TradingData, AccidentData, GlobalCont
 from DTM.env.gen_event import Event
 from DTM.trading import *
 from tests.trading_test import vehicle_preference
+import json
 
 
 class DataTrade:
@@ -18,6 +19,7 @@ class DataTrade:
         for vid in vids:
             if traci.vehicle.getTypeID(vid) == "human":
                 continue
+            print("*"*10, global_context.visibility)
             if traci.vehicle.getNextTLS(vid)[0][2] < global_context.visibility:
                 vehicle = Vehicle(
                     vid,
@@ -29,11 +31,15 @@ class DataTrade:
                 )
 
             # 调用trading中的函数，发起交易
-            openai_login(azure=True) 
-            self.offer_context = vehicle.propose_offer()
-            self.decision_context = self.controller.decide_offer(self.offer_context)
-            self.extracted_offer = extract_offer(self.offer_context)
-            self.extracted_decision = extract_decision(self.decision_context)
-            
-            
-            
+                openai_login(azure=True)
+
+                self.offer_context = vehicle.propose_offer()
+                self.decision_context = self.controller.decide_offer(
+                    self.offer_context)
+                print(self.offer_context)
+                with open("./logs/offer_context.json", "a+") as f:
+                    json.dump(self.offer_context, f)
+                    f.write('\n')
+                with open("./logs/decision_context.json", "a+") as f:
+                    json.dump(self.decision_context, f)
+                    f.write('\n')
