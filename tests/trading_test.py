@@ -1,30 +1,17 @@
 # 用于测试函数
 import openai
-import os
-from dotenv import load_dotenv
-from DTM.trading import Vehicle
+from DTM.trading import *
 from typings.datatype import *
 
 
-def openai_login(azure=False):
-    load_dotenv()
-    if azure is True:
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        openai.api_base = os.getenv("OPENAI_ENDPOINT")
-        openai.api_type = "azure"
-        openai.api_version = (
-            "2023-07-01-preview"  # 使用function_calling 有特定version需求，且gpt需要部署为0613版本
-        )
-    else:
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-
-
-openai_login(azure=True)
-
-actor_id = "vehicle_001"
 
 # 智能车的个人数据
+vehicle_id = "vehicle_001"
 vehicle_personal_data = PersonalData(location=[10, 20])
+
+controller_id = 'controller_1'
+controller_personal_data = PersonalData(location=[5, 20])
+
 
 # 智能车的交易数据
 vehicle_trading_data = TradingData(
@@ -39,13 +26,44 @@ vehicle_trading_data = TradingData(
     },
 )
 
+# controller的交易数据
+controller_trading_data = TradingData(
+    current_token= 100,
+    history_average_price= 10,
+    accident_info = None    
+)
+
 # 智能车的偏好设置
 vehicle_preference = Preference(
+    trading_purpose="获得最大化收益", expected_price=12.0, cost=1.0
+)
+
+# controller的偏好设置
+controller_preference = Preference(
     trading_purpose="获得最大化收益", expected_price=10.0, cost=1.0
 )
 
 vehicle_1 = Vehicle(
-    actor_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference
+    vehicle_id, vehicle_personal_data, vehicle_trading_data, vehicle_preference
 )
 
-print(vehicle_1.propose_offer())
+
+if __name__ == "__main__":
+    openai_login(azure=True) 
+    offer_context = vehicle_1.propose_offer()
+    print(offer_context)
+
+    controller_1 = Controller(
+    controller_id, controller_personal_data, controller_trading_data, controller_preference  
+    )
+    decision_context = controller_1.decide_offer(offer_context)
+    print(decision_context)
+    
+    # 测试提取函数
+    extracted_offer = extract_offer(offer_context)
+    print("Extracted Offer: ", extracted_offer)
+
+    extracted_decision = extract_decision(decision_context)
+    print("Extracted Decision: ", extracted_decision)
+
+
