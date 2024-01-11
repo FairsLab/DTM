@@ -72,6 +72,7 @@ class SimTraci:
                 if self.sim_step % 150 == 0:
                     Calc_nearby_accident(self.global_context)
                     Calc_traffic_flow(self.global_context)
+                    
                     if self.sim_step % 150 == 0:
                         for vid in self.global_context.vehicles.keys():
 

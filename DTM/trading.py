@@ -4,8 +4,12 @@ import os
 import logging
 import re
 import json
+<<<<<<< HEAD
 from dotenv import load_dotenv
 from typings.datatype import PersonalData, TradingData, Preference, Offer, Decision
+=======
+from typings.datatype import PersonalData, TradingData, Preference, Offer, Decision, GlobalContext
+>>>>>>> 11bb6dc (update traci_calculation, datatype, data_trade)
 
 
 def openai_login(azure=False):
