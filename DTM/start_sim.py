@@ -52,8 +52,8 @@ class SimTraci:
         self.global_context = GlobalContext()
         self.global_context.vehicles = {}
         self.global_context.visibility = kwargs["visibility"]
-        print("*"*30, kwargs["visibility"])
-        print("*"*30, kwargs["visibility"])
+        print("*" * 30, kwargs["visibility"])
+        print("*" * 30, kwargs["visibility"])
         # network settings for a random network
         self.network_setting = kwargs["network_setting"]
         # simulation settings

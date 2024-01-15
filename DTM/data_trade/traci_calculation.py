@@ -46,8 +46,7 @@ def Calc_traffic_flow(global_context: GlobalContext):
         pos = np.array(global_context.vehicles[vid].position)
         for vid2 in vids:
             # print(global_context["cars"])
-            dis = np.linalg.norm(
-                pos - np.array(traci.vehicle.getPosition(vid2)))
+            dis = np.linalg.norm(pos - np.array(traci.vehicle.getPosition(vid2)))
             if dis < global_context.visibility:
                 road = traci.vehicle.getRoadID(vid2)
                 if road not in res.keys():
@@ -67,8 +66,7 @@ def Calc_nearby_accident(global_context: GlobalContext):
             if eid in global_context.vehicles[vid].accident.keys():
                 continue
             vehicle_position = np.array(global_context.vehicles[vid].position)
-            event_position = np.array(
-                global_context.event.accident_position[eid])
+            event_position = np.array(global_context.event.accident_position[eid])
             if (
                 np.linalg.norm(event_position - vehicle_position)
                 < global_context.visibility
@@ -118,11 +116,9 @@ class SumoVehicle:
         accident_info = AccidentData(
             accident_id=self.accident[accident_id],
             accident_road_id=self.accident[accident_id]["Accident_Location"],
-            accident_position=list(
-                self.accident[accident_id]["Accident_Position"]),
+            accident_position=list(self.accident[accident_id]["Accident_Position"]),
             time_to_trading_point=str(
-                (global_context.step -
-                 self.accident[accident_id]["accident_time"]) / 10
+                (global_context.step - self.accident[accident_id]["accident_time"]) / 10
             )
             + "s",
             distance_to_traing_point=str(
