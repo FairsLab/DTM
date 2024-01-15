@@ -8,7 +8,7 @@ from typings.datatype import *
 vehicle_id = "vehicle_001"
 vehicle_personal_data = PersonalData(road_id="A0A1", position=[10, 20])
 
-controller_id = 'controller_1'
+controller_id = "controller_1"
 controller_personal_data = ControllerPersonalData()
 
 
@@ -27,9 +27,7 @@ vehicle_trading_data = TradingData(
 
 # controller的交易数据
 controller_trading_data = TradingData(
-    current_token=100,
-    history_average_price=10,
-    accident_info=None
+    current_token=100, history_average_price=10, accident_info=None
 )
 
 # 智能车的偏好设置
@@ -47,7 +45,10 @@ vehicle_1 = Vehicle(
 )
 
 controller_1 = Controller(
-    controller_id, controller_personal_data, controller_trading_data, controller_preference
+    controller_id,
+    controller_personal_data,
+    controller_trading_data,
+    controller_preference,
 )
 
 if __name__ == "__main__":

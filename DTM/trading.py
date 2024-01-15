@@ -59,7 +59,9 @@ class Vehicle(MetaActor):
 
 
 class Controller(MetaActor):
-    def __init__(self, actor_id, personal_data: ControllerPersonalData, trading_data, preference) -> None:
+    def __init__(
+        self, actor_id, personal_data: ControllerPersonalData, trading_data, preference
+    ) -> None:
         self.actor_id = actor_id
         self.personal_data = personal_data
         self.trading_data = trading_data
@@ -100,7 +102,7 @@ def format_input_for_openai(input_data):
 def extract_offer(offer_context):
     # 解析 JSON 字符串
     arguments_string = offer_context["function_call"]["arguments"]
-    print("-"*20, arguments_string)
+    print("-" * 20, arguments_string)
     arguments = json.loads(arguments_string)
     # 提取信息
     data_description = arguments.get("data_description", "")
@@ -109,7 +111,7 @@ def extract_offer(offer_context):
     extracted_info = {
         "data_description": data_description,
         "price": price,
-        "offer_reason": offer_reason
+        "offer_reason": offer_reason,
     }
     return extracted_info
 
@@ -117,15 +119,11 @@ def extract_offer(offer_context):
 def extract_decision(decision_context):
     # 解析 JSON 字符串
     arguments_string = decision_context["function_call"]["arguments"]
-    print("?"*20, arguments_string)
+    print("?" * 20, arguments_string)
     arguments = json.loads(arguments_string)
     # 提取信息
     decision = arguments.get("decision", False)
     decision_reason = arguments.get("reason", "")
 
-    extracted_info = {
-        "decision": decision,
-        "reason": decision_reason
-    }
+    extracted_info = {"decision": decision, "reason": decision_reason}
     return extracted_info
-
