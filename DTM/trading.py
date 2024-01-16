@@ -23,7 +23,7 @@ def call_openai(azure = False, input_data = None, functions = Offer):
     if azure == False:
         # 调用openai.ChatCompletion.create()来生成提议
         response = openai.ChatCompletion.create(
-            model="gpt-4-1106-preview",  # openai_key的调用方法。
+            model="gpt-4-1106-preview",  # openai_key的调用方法，可以调用gpt-3.5-turbo或者gpt-4-1106-preview
             messages=[{"role": "user", "content": prompt}],
             functions=functions,
             function_call="auto",
