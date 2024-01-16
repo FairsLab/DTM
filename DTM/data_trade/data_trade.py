@@ -29,10 +29,11 @@ class DataTrade:
                 )
 
                 # 调用trading中的函数，发起交易
-                openai_login(azure=True)
+                azure = False
+                openai_login(azure=azure)
 
-                self.offer_context = vehicle.propose_offer()
-                self.decision_context = self.controller.decide_offer(self.offer_context)
+                self.offer_context = vehicle.propose_offer(azure = azure)
+                self.decision_context = self.controller.decide_offer(azure = azure, offer_context=self.offer_context)
                 print(self.offer_context)
                 with open("./logs/offer_context.json", "a+") as f:
                     json.dump(self.offer_context, f)

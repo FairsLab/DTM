@@ -54,10 +54,10 @@ controller_1 = Controller(
 if __name__ == "__main__":
     azure = False
     openai_login(azure=azure)
-    offer_context = vehicle_1.propose_offer(azure)
+    offer_context = vehicle_1.propose_offer(azure = azure)
     print('*'*30, offer_context)
 
-    decision_context = controller_1.decide_offer(azure, offer_context)
+    decision_context = controller_1.decide_offer(azure = azure, offer_context=offer_context)
     print('*'*30, decision_context)
 
     # # 测试提取函数
