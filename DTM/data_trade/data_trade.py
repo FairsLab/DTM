@@ -19,7 +19,6 @@ class DataTrade:
         for vid in vids:
             if traci.vehicle.getTypeID(vid) == "human":
                 continue
-            print("*"*10, global_context.visibility)
             if traci.vehicle.getNextTLS(vid)[0][2] < global_context.visibility:
                 vehicle = Vehicle(
                     vid,
@@ -32,14 +31,29 @@ class DataTrade:
 
             # 调用trading中的函数，发起交易
                 openai_login(azure=True)
-
-                self.offer_context = vehicle.propose_offer()
-                self.decision_context = self.controller.decide_offer(
-                    self.offer_context)
-                print(self.offer_context)
-                with open("./logs/offer_context.json", "a+") as f:
-                    json.dump(self.offer_context, f)
-                    f.write('\n')
-                with open("./logs/decision_context.json", "a+") as f:
-                    json.dump(self.decision_context, f)
-                    f.write('\n')
+                for retry in range(3):
+                    try:
+                        self.offer_context = vehicle.propose_offer()
+                        self.decision_context = self.controller.decide_offer(
+                            self.offer_context)
+                        self.extracted_decision = extract_decision(
+                            self.decision_context)
+                        self.extracted_offer = extract_offer(
+                            self.offer_context)
+                        with open("./logs/offer_raw_context.json", "a+") as f:
+                            json.dump(self.offer_context, f)
+                            f.write('\n')
+                        with open("./logs/decision_raw_context.json", "a+") as f:
+                            json.dump(self.decision_context, f)
+                            f.write('\n')
+                        with open("./logs/offers.json", "a+") as f:
+                            json.dump(self.extracted_offer, f)
+                            f.write('\n')
+                        with open("./logs/decisions.json", "a+") as f:
+                            json.dump(self.extracted_decision, f)
+                            f.write('\n')
+                        break
+                    except Exception as e:
+                        print(e)
+                        print("!"*30)
+                        continue
