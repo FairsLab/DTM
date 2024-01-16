@@ -17,6 +17,34 @@ def openai_login(azure=False):
     else:
         openai.api_key = os.getenv("OPENAI_API_KEY_openai")
 
+def call_openai(azure = False, input_data = None, functions = Offer):
+    # 转换input_data为适合openai.ChatCompletion.create()的格式
+    prompt = format_input_for_openai(input_data)
+    if azure == False:
+        # 调用openai.ChatCompletion.create()来生成提议
+        response = openai.ChatCompletion.create(
+            model="gpt-4-1106-preview",  # openai_key的调用方法。
+            messages=[{"role": "user", "content": prompt}],
+            functions=functions,
+            function_call="auto",
+            # max_tokens=1,
+            # temperature=0.1,
+        )
+    else:
+        # 调用openai.ChatCompletion.create()来生成提议
+        response = openai.ChatCompletion.create(
+            engine='gpt35',
+            messages=[{"role": "user", "content": prompt}],
+            functions=functions,
+            function_call="auto",
+            # max_tokens=1,
+            # temperature=0.1,
+        )
+    
+    # 从response中提取message
+    message = response.choices[0].message
+    return message
+
 
 class MetaActor:
     personal_data: PersonalData
@@ -31,32 +59,14 @@ class Vehicle(MetaActor):
         self.trading_data = trading_data
         self.preference = preference
 
-    def propose_offer(self):
+    def propose_offer(self, azure = False):
         # 整合输入数据
         input_data = {
             "personal_data": self.personal_data,
             "trading_data": self.trading_data,
             "preference": self.preference,
         }
-        # 转换input_data为适合openai.ChatCompletion.create()的格式
-        prompt = format_input_for_openai(input_data)
-
-        # 调用openai.ChatCompletion.create()来生成提议
-        response = openai.ChatCompletion.create(
-            # engine="gpt35",  # 部署名
-            model="gpt-3.5-turbo-0613",
-            messages=[{"role": "user", "content": prompt}],
-            functions=Offer,
-            function_call="auto",
-            # max_tokens=1,
-            # temperature=0.1,
-        )
-
-        # 从response中提取message
-        message = response.choices[0].message
-
-        # 返回message给controller
-        return message
+        return call_openai(azure, input_data, functions=Offer)
 
 
 class Controller(MetaActor):
@@ -68,7 +78,7 @@ class Controller(MetaActor):
         self.trading_data = trading_data
         self.preference = preference
 
-    def decide_offer(self, offer_context):
+    def decide_offer(self, azure = False, offer_context = None):
         # 整合输入数据
         input_data = {
             "message": offer_context,
@@ -76,22 +86,7 @@ class Controller(MetaActor):
             "trading_data": self.trading_data,
             "preference": self.preference,
         }
-        # 转换input_data为适合openai.ChatCompletion.create()的格式
-        prompt = format_input_for_openai(input_data)
-        # 调用openai.ChatCompletion.create()来生成提议
-        response = openai.ChatCompletion.create(
-            engine="gpt35",  # 部署名
-            messages=[{"role": "user", "content": prompt}],
-            functions=Decision,
-            function_call="auto",
-            # max_tokens=1,
-            # temperature=0.1,
-        )
-
-        # 从response中提取message
-        message = response.choices[0].message
-        # 返回message给controller
-        return message
+        return call_openai(azure, input_data, functions=Decision)
 
 
 def format_input_for_openai(input_data):
