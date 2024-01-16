@@ -15,7 +15,7 @@ def openai_login(azure=False):
             "2023-07-01-preview"  # 使用function_calling 有特定version需求，且gpt需要部署为0613版本
         )
     else:
-        openai.api_key = os.getenv("OPENAI_API_KEY")
+        openai.api_key = os.getenv("OPENAI_API_KEY_openai")
 
 
 class MetaActor:
@@ -43,7 +43,8 @@ class Vehicle(MetaActor):
 
         # 调用openai.ChatCompletion.create()来生成提议
         response = openai.ChatCompletion.create(
-            engine="gpt35",  # 部署名
+            # engine="gpt35",  # 部署名
+            model="gpt-3.5-turbo-0613",
             messages=[{"role": "user", "content": prompt}],
             functions=Offer,
             function_call="auto",

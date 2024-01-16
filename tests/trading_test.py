@@ -52,7 +52,7 @@ controller_1 = Controller(
 )
 
 if __name__ == "__main__":
-    openai_login(azure=True)
+    openai_login(azure=False)
     offer_context = vehicle_1.propose_offer()
     print(offer_context)
 
