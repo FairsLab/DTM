@@ -19,9 +19,6 @@ def ensure_log_directories_exist():
     """确保日志目录存在"""
     os.makedirs('./logs', exist_ok=True)
 
-
-
-
 class DataTrade:
     def __init__(self, controller: Controller):
         self.controller = controller
@@ -72,33 +69,3 @@ class DataTrade:
                             print(f"Attempt {retry + 1} failed: {e}")
                             print("!"*30)
                             continue
-
-                        
-                # for retry in range(3):
-                #     try:
-                #         self.offer_context = vehicle.propose_offer(
-                #             azure = azure)
-                #         self.decision_context = self.controller.decide_offer(
-                #             azure = azure, 
-                #             offer_context=self.offer_context)
-                #         self.extracted_decision = extract_decision(
-                #             self.decision_context)
-                #         self.extracted_offer = extract_offer(
-                #             self.offer_context)
-                #         with open("./logs/offer_raw_context.json", "a+") as f:
-                #             json.dump(self.offer_context, f)
-                #             f.write('\n')
-                #         with open("./logs/decision_raw_context.json", "a+") as f:
-                #             json.dump(self.decision_context, f)
-                #             f.write('\n')
-                #         with open("./logs/offers.json", "a+") as f:
-                #             json.dump(self.extracted_offer, f)
-                #             f.write('\n')
-                #         with open("./logs/decisions.json", "a+") as f:
-                #             json.dump(self.extracted_decision, f)
-                #             f.write('\n')
-                #         break
-                #     except Exception as e:
-                #         print(e)
-                #         print("!"*30)
-                #         continue
