@@ -52,8 +52,6 @@ class SimTraci:
         self.global_context = GlobalContext()
         self.global_context.vehicles = {}
         self.global_context.visibility = kwargs["visibility"]
-        print("*" * 30, kwargs["visibility"])
-        print("*" * 30, kwargs["visibility"])
         # network settings for a random network
         self.network_setting = kwargs["network_setting"]
         # simulation settings
@@ -71,6 +69,8 @@ class SimTraci:
             traci.simulationStep()
             # pdb.set_trace()
             self.global_context.step = self.sim_step
+            if self.sim_step % 10 == 0:
+                print(self.sim_step/10, "s")
             if self.sim_step % 300 == 0:
                 Update_Cars_info(self.global_context)
                 if self.sim_step % 300 == 0:
