@@ -52,16 +52,16 @@ controller_1 = Controller(
 )
 
 if __name__ == "__main__":
-    openai_login(azure=True)
-    offer_context = vehicle_1.propose_offer()
-    print(offer_context)
+    azure = False
+    openai_login(azure=azure)
+    offer_context = vehicle_1.propose_offer(azure = azure)
+    print('*'*30, offer_context)
 
-    decision_context = controller_1.decide_offer(offer_context)
-    print(decision_context)
+    decision_context = controller_1.decide_offer(azure = azure, offer_context=offer_context)
+    print('*'*30, decision_context)
 
-    # 测试提取函数
-    extracted_offer = extract_offer(offer_context)
-    print("Extracted Offer: ", extracted_offer)
-
-    extracted_decision = extract_decision(decision_context)
-    print("Extracted Decision: ", extracted_decision)
+    # # 测试提取函数
+    # extracted_offer = extract_offer(offer_context)
+    # print("Extracted Offer: ", extracted_offer)
+    # extracted_decision = extract_decision(decision_context)
+    # print("Extracted Decision: ", extracted_decision)
