@@ -40,7 +40,7 @@ v_accident = {
 generate_net = True
 control_option = True
 trading_option = False
-gui = False
+gui = True
 graph_plot = True
 simulation_option = {
     "generate_net": generate_net,
