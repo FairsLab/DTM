@@ -98,7 +98,7 @@ def format_input_for_openai(input_data):
 def extract_offer(offer_context):
     # 解析 JSON 字符串
     arguments_string = offer_context["function_call"]["arguments"]
-    print("-" * 20, arguments_string)
+    # print("-"*20, arguments_string)
     arguments = json.loads(arguments_string)
     # 提取信息
     data_description = arguments.get("data_description", "")
@@ -115,7 +115,7 @@ def extract_offer(offer_context):
 def extract_decision(decision_context):
     # 解析 JSON 字符串
     arguments_string = decision_context["function_call"]["arguments"]
-    print("?" * 20, arguments_string)
+    # print("?"*20, arguments_string)
     arguments = json.loads(arguments_string)
     # 提取信息
     decision = arguments.get("decision", False)
