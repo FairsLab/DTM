@@ -37,7 +37,7 @@ v_accident = {
 }
 
 """simulation option"""
-generate_net = True
+generate_net = False  # 是否重新生成路网
 control_option = False
 trading_option = False
 gui = True

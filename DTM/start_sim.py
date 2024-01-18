@@ -81,13 +81,15 @@ class SimTraci:
                 if self.sim_step % 300 == 0:
                     Calc_nearby_accident(self.global_context)
                     Calc_traffic_flow(self.global_context)
-                    datatrade.start_trade(self.global_context)
                     
                     # TODO if 交易3次 $ 处于最后phase
                     trade_cnt = datatrade.controller.trade_count
                     if trade_cnt > 3:
                         print('condition meet!!!!!! switch signal strategy')
                         SignalControl.data_driven_control(controller_id='A1')
+                    else:
+                        datatrade.start_trade(self.global_context)
+
                     # traci.trafficlight.getPhase(traffic_light_id)
                     # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
