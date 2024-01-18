@@ -100,7 +100,7 @@ Decision = [
             "properties": {
                 "decision": {
                     "type": "boolean",
-                    "description": "The decision of say yes or no to the offer",
+                    "description": "The decision to the offer, True means yes and False means no",
                 },
                 "reason": {
                     "type": "string",

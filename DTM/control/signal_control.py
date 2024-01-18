@@ -32,9 +32,9 @@ def data_driven_control(controller_id = 'A1'):
     # Create a Logic instance
     program_id = "data_driven_control"
     phases = [
-        traci.trafficlight.Phase(42, "GGGGgrrrrrGGGGgrrrrr", 5, 50),
+        traci.trafficlight.Phase(20, "GGGGgrrrrrGGGGgrrrrr", 5, 50),
         traci.trafficlight.Phase(3, "yyyyyrrrrryyyyyrrrrr"),
-        traci.trafficlight.Phase(42, "rrrrrGGGGgrrrrrGGGGg", 5, 50),
+        traci.trafficlight.Phase(50, "rrrrrGGGGgrrrrrGGGGg", 5, 50),
         traci.trafficlight.Phase(3, "rrrrryyyyyrrrrryyyyy")
     ]
     logic = traci.trafficlight.Logic(programID=program_id, type=0, currentPhaseIndex=0, phases=phases)

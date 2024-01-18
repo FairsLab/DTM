@@ -77,6 +77,7 @@ class Controller(MetaActor):
         self.personal_data = personal_data
         self.trading_data = trading_data
         self.preference = preference
+        self.trade_count = 0
 
     def decide_offer(self, azure = False, offer_context = None):
         # 整合输入数据

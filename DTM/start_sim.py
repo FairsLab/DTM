@@ -79,6 +79,10 @@ class SimTraci:
                     datatrade.start_trade(self.global_context)
                     
                     # TODO if 交易3次 $ 处于最后phase
+                    trade_cnt = datatrade.controller.trade_count
+                    if trade_cnt > 3:
+                        print('condition meet!!!!!! switch signal strategy')
+                        data_driven_control(controller_id='A1')
                     # traci.trafficlight.getPhase(traffic_light_id)
                     # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
@@ -102,7 +106,6 @@ class SimTraci:
             # pdb.set_trace()
             if event:
                 event.event_loger(self.sim_step)
-                data_driven_control()
             if trade_register:
                 pass
             # if self.graph_plot:

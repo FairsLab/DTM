@@ -26,7 +26,7 @@ class DataTrade:
     def start_trade(self, global_context: GlobalContext):
         vids = traci.vehicle.getIDList()
         for vid in vids:
-            if traci.vehicle.getTypeID(vid) == "human":
+            if traci.vehicle.getTypeID(vid) == "human" or self.controller.trade_count >3:
                 continue
             if traci.vehicle.getNextTLS(vid)[0][2] < global_context.visibility:
                 vehicle = Vehicle(
@@ -64,6 +64,8 @@ class DataTrade:
                             create_and_append_json(decision_raw_file, self.decision_context)
                             create_and_append_json(offers_file, self.extracted_offer)
                             create_and_append_json(decisions_file, self.extracted_decision)
+                            if self.extracted_decision["decision"] == True:
+                                self.controller.trade_count += 1
                             break
                         except Exception as e:
                             print(f"Attempt {retry + 1} failed: {e}")
