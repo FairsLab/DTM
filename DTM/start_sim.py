@@ -20,7 +20,7 @@ import traci
 
 from DTM.env.generate_sumo import GenSumo
 from DTM.env.gen_event import Event
-from DTM.control.signal_control import SignalControl
+from DTM.control.signal_control import *
 from DTM.data_trade.data_trade import DataTrade
 from DTM.data_trade.traci_calculation import (
     Update_Cars_info,
@@ -79,6 +79,7 @@ class SimTraci:
                     datatrade.start_trade(self.global_context)
                     
                     # TODO if 交易3次 $ 处于最后phase
+                    # traci.trafficlight.getPhase(traffic_light_id)
                     # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
                     # Apply control strategy after data trading and traffic data calculations
@@ -86,6 +87,7 @@ class SimTraci:
                     #     data_driven_strategy.apply_strategy()
                     # else:
                     #     basic_strategy.apply_strategy()
+                
                     
                     if self.sim_step % 300 == 0:
                         for vid in self.global_context.vehicles.keys():
@@ -100,6 +102,7 @@ class SimTraci:
             # pdb.set_trace()
             if event:
                 event.event_loger(self.sim_step)
+                data_driven_control()
             if trade_register:
                 pass
             # if self.graph_plot:
