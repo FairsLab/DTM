@@ -27,7 +27,7 @@ class Event:
         accident_vehicle = None
         for step_start in t_start:
             if step == step_start:
-                pdb.set_trace()
+                
                 index_accident = t_start.index(step_start)
                 edge = location[index_accident]
                 pos = position[index_accident]
@@ -41,6 +41,8 @@ class Event:
                         ):
                             accident_vehicle = v_id
                             best_pos = v_pos
+                            pdb.set_trace()
+                            print("accident!!!!!!!")
                         if v_pos > pos:
                             if accident_vehicle:
                                 self.accident_object[index_accident] = accident_vehicle

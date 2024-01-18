@@ -78,7 +78,7 @@ def Calc_nearby_accident(global_context: GlobalContext):
                     "accident_vid": global_context.event.accident_object[eid],
                     "traded": False,
                 }
-
+                print(global_context.vehicles[vid].accident[eid])
 
 # 判断哪些车辆需要进入交易(距离下一个信号灯足够近)
 

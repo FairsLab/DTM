@@ -28,11 +28,18 @@ class DataTrade:
         for vid in vids:
             if traci.vehicle.getTypeID(vid) == "human" or self.controller.trade_count >3:
                 continue
-            if traci.vehicle.getNextTLS(vid)[0][2] < global_context.visibility:
+            next_TLS= traci.vehicle.getNextTLS(vid)
+            if len(next_TLS) == 0:
+                continue
+            
+            if next_TLS[0][2] < global_context.visibility:
+                trading_data=global_context.vehicles[vid].get_trading_data(global_context)
+                if trading_data is None :
+                    continue
                 vehicle = Vehicle(
                     vid,
                     global_context.vehicles[vid].get_personal_data(global_context),
-                    global_context.vehicles[vid].get_trading_data(global_context),
+                    trading_data,
                     vehicle_preference,
                 )
                 # 获取当前日期
