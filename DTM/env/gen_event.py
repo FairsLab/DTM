@@ -27,7 +27,7 @@ class Event:
         accident_vehicle = None
         for step_start in t_start:
             if step == step_start:
-                # pdb.set_trace()
+                pdb.set_trace()
                 index_accident = t_start.index(step_start)
                 edge = location[index_accident]
                 pos = position[index_accident]

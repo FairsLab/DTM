@@ -91,10 +91,10 @@ class GenSumo:
              <vType id="data" color="0,1,0" accel="0.73" decel="1.67" length="5" minGap="2.0" maxSpeed="14" 
             carFollowModel="IDM" tau="1.0"/>
 
-            <vType id="human" color="0.5,0,0" accel="0.73" decel="1.67" length="5" minGap="2.0" maxSpeed="14" 
+            <vType id="human" color="0,1,0" accel="0.73" decel="1.67" length="5" minGap="2.0" maxSpeed="14" 
             carFollowModel="IDM" tau="1.6"/>
 
-            <vType id="accident" color="1,0,0" accel="0.73" decel="1400" length="5" minGap="2.0" maxSpeed="14" 
+            <vType id="accident" color="0.5,0,0" accel="0.73" decel="1400" length="5" minGap="2.0" maxSpeed="14" 
             carFollowModel="IDM" tau="1.6"/>
 
             <route id="r_1" edges="bottom0A0 A0A1 A1top0" />

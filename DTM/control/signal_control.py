@@ -5,7 +5,11 @@ class SignalControl:
     def __init__(self):
         pass
     
+    
     def data_driven_control(controller_id = 'A1'):
+        #     a=random.rand(1)
+#     if change_rate < a:
+#         traci.trafficlight.setPhaseId(id, p1)
         controller_id = controller_id
         
         # Define the custom program
@@ -23,9 +27,7 @@ class SignalControl:
         # Apply the custom program to the traffic light
         traci.trafficlight.setProgramLogic(controller_id, logic)
 
-#     a=random.rand(1)
-#     if change_rate < a:
-#         traci.trafficlight.setPhaseId(id, p1)
+
             
     
 
