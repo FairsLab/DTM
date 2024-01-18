@@ -124,6 +124,7 @@ class SimTraci:
                 #     self.draw_control()
             self.sim_step += 1
         traci.close()
+        plot.save_plot(filename='test')
         sys.stdout.flush()
 
 
