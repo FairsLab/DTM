@@ -20,15 +20,17 @@ import traci
 
 from DTM.env.generate_sumo import GenSumo
 from DTM.env.gen_event import Event
-from DTM.control.signal_control import *
+from DTM.control.signal_control import SignalControl
 from DTM.data_trade.data_trade import DataTrade
 from DTM.data_trade.traci_calculation import (
     Update_Cars_info,
     Calc_nearby_accident,
     Calc_traffic_flow,
     GlobalContext,
+    _get_total_delay,
 )
 from typings.datatype import *
+from DTM.plot_delay import RealTimePlot
 
 
 class SimTraci:
@@ -59,12 +61,15 @@ class SimTraci:
         # sim step initial
         self.sim_step = 0
 
+ 
     def __sumo_run(self, **kwargs):
         event = kwargs.get("event", None)
         self.global_context.event = event
         trade_register = kwargs.get("trade", None)
         controlled_signal = kwargs.get("control", None)
         datatrade = DataTrade(controller_1)
+        plot = RealTimePlot()  # TODO 增加plot
+        
         while traci.simulation.getMinExpectedNumber() > 0:
             traci.simulationStep()
             # pdb.set_trace()
@@ -82,7 +87,7 @@ class SimTraci:
                     trade_cnt = datatrade.controller.trade_count
                     if trade_cnt > 3:
                         print('condition meet!!!!!! switch signal strategy')
-                        data_driven_control(controller_id='A1')
+                        SignalControl.data_driven_control(controller_id='A1')
                     # traci.trafficlight.getPhase(traffic_light_id)
                     # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
@@ -108,13 +113,17 @@ class SimTraci:
                 event.event_loger(self.sim_step)
             if trade_register:
                 pass
-            # if self.graph_plot:
-            #     if self.simstep % 200 == 0:
-            #         GraphPresent.draw_physic()
-            #         self.draw_control()
+            if self.graph_plot:
+                total_delay = _get_total_delay()
+                time_step = self.sim_step
+                plot.update_plot(time_step, total_delay)
+                # if self.simstep % 200 == 0:
+                #     GraphPresent.draw_physic()
+                #     self.draw_control()
             self.sim_step += 1
         traci.close()
         sys.stdout.flush()
+
 
     # start sumo simulation
     def __sumo_start(self):
