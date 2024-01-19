@@ -38,7 +38,7 @@ v_accident = {
 
 """simulation and trading option"""
 generate_net = False  # 是否重新生成路网
-control_option = False
+control_option = False # actuated traffic signal on or off
 trading_option = False
 azure_option = False
 openai_model = "gpt-4-1106-preview"  # gpt-3.5-turbo或者gpt-4-1106-preview

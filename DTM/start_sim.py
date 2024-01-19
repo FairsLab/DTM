@@ -69,7 +69,7 @@ class SimTraci:
         event = kwargs.get("event", None)
         self.global_context.event = event
         trade_register = kwargs.get("trade", None)
-        controlled_signal = kwargs.get("control", None)
+        controlled_signal = kwargs.get("control", None)  # TODO 其他control strategy的开关
         datatrade = DataTrade(controller_1)
         plot = RealTimePlot()  # TODO 增加plot
         
@@ -122,7 +122,7 @@ class SimTraci:
                 #     self.draw_control()
             self.sim_step += 1
         traci.close()
-        plot.save_plot(filename='test')
+        plot.save_plot(filename=f'{self.data_trade}')
         sys.stdout.flush()
 
 

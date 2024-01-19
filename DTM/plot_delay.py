@@ -12,7 +12,9 @@ class RealTimePlot:
         self.fig, self.ax = plt.subplots()
         self.x, self.y = [], []
         self.line, = self.ax.plot(self.x, self.y, 'r-', linewidth=2)  # 初始化一条红色线
-
+        self.ax.set_xlabel('Time (s)')  # 设置X轴名字
+        self.ax.set_ylabel('Total average delay')  # 设置Y轴名字
+        
     def update_plot(self, time_step, total_delay):
         self.x.append(time_step)
         self.y.append(total_delay)
