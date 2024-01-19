@@ -45,7 +45,6 @@ class SimTraci:
         self.anime_variable = kwargs["option"]["gui"]
         self.generate_net = kwargs["option"]["generate_net"]
         self.control_option = kwargs["option"]["control_option"]
-        self.data_trade = kwargs["option"]["trading"]
         self.graph_plot = kwargs["option"]["graph"]
         # network data path
         self.gen_path = kwargs["network"]
@@ -54,6 +53,9 @@ class SimTraci:
         self.global_context = GlobalContext()
         self.global_context.vehicles = {}
         self.global_context.visibility = kwargs["visibility"]
+        # trading option
+        self.global_context.trading_option['azure']= kwargs["option"]["azure"]
+        self.data_trade = kwargs["option"]["trading"]
         # network settings for a random network
         self.network_setting = kwargs["network_setting"]
         # simulation settings

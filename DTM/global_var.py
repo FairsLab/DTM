@@ -36,16 +36,18 @@ v_accident = {
     "pos": [430, 200],
 }
 
-"""simulation option"""
+"""simulation and trading option"""
 generate_net = False  # 是否重新生成路网
 control_option = False
 trading_option = False
+azure_option = False
 gui = True
 graph_plot = True
 simulation_option = {
     "generate_net": generate_net,
     "control_option": control_option,
     "trading": trading_option,
+    "azure": azure_option,
     "gui": gui,
     "graph": graph_plot,
 }

@@ -53,7 +53,7 @@ class DataTrade:
                 decisions_file = f"./logs/decisions_{current_date}.json"
 
             # 调用trading中的函数，发起交易
-                azure = False
+                azure = global_context.trading_option['azure']
                 openai_login(azure=azure)
                 with open(offer_raw_file, "a+") as offer_raw_file, \
                     open(decision_raw_file, "a+") as decision_raw_file, \
