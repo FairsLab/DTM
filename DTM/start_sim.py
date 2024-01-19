@@ -84,24 +84,19 @@ class SimTraci:
                 if self.sim_step % 300 == 0:
                     Calc_nearby_accident(self.global_context)
                     Calc_traffic_flow(self.global_context)
-                    
-                    # TODO if 交易3次 $ 处于最后phase
-                    trade_cnt = datatrade.controller.trade_count
-                    if trade_cnt > 3:
-                        print('condition meet!!!!!! switch signal strategy')
-                        SignalControl.data_driven_control(controller_id='A1')
-                    else:
-                        datatrade.start_trade(self.global_context)
-
-                    # traci.trafficlight.getPhase(traffic_light_id)
+                    if self.data_trade:
+                        trade_cnt = datatrade.controller.trade_count
+                        traffic_light_id = 'A1'
+                        current_phase = traci.trafficlight.getPhase(traffic_light_id)
+                        total_phases = traci.trafficlight.getPhaseNumber(traffic_light_id)
+                        # if 交易3次 & 处于最后phase
+                        if (trade_cnt > 3) & (current_phase == total_phases - 1):
+                            print('condition meet!!!!!! switch signal strategy')
+                            SignalControl.data_driven_control(controller_id=traffic_light_id)
+                        else:
+                            datatrade.start_trade(self.global_context)
                     # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
-                    # Apply control strategy after data trading and traffic data calculations
-                    # if condition_for_data_driven_strategy:  # Define your condition based on the latest data
-                    #     data_driven_strategy.apply_strategy()
-                    # else:
-                    #     basic_strategy.apply_strategy()
-                
                     
                     if self.sim_step % 300 == 0:
                         for vid in self.global_context.vehicles.keys():

@@ -28,5 +28,5 @@ class RealTimePlot:
 
 
     def save_plot(self, filename = None):
-        filename = 'delay_over_time' + filename
+        filename = '.images/delay_over_time' + filename
         self.fig.savefig(filename, dpi=300)  # 保存图片到文件
