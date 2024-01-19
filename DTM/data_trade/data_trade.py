@@ -36,6 +36,7 @@ class DataTrade:
                 trading_data=global_context.vehicles[vid].get_trading_data(global_context)
                 if trading_data is None :
                     continue
+                print(next_TLS)                
                 vehicle = Vehicle(
                     vid,
                     global_context.vehicles[vid].get_personal_data(global_context),

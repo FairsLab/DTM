@@ -30,8 +30,8 @@ simulation_settings = {
 """irregular event"""
 # irregular event attribute
 v_accident = {
-    "start_time": [1000, 1700],
-    "end_time": [2100, 2000],
+    "start_time": [2000, 4000],
+    "end_time": [5000, 7000],
     "lane": ["A0A1_0", "A0A1_1"],
     "pos": [430, 200],
 }
