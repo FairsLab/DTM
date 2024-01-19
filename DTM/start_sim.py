@@ -69,7 +69,7 @@ class SimTraci:
         event = kwargs.get("event", None)
         self.global_context.event = event
         trade_register = kwargs.get("trade", None)
-        controlled_signal = kwargs.get("control", None)  # TODO 其他control strategy的开关
+        controlled_signal = kwargs.get("control", None)  # TODO 其他control strategy的开关？是否和trading_option重复了？
         datatrade = DataTrade(controller_1)
         plot = RealTimePlot()  # TODO 增加plot
         
@@ -79,50 +79,43 @@ class SimTraci:
             self.global_context.step = self.sim_step
             if self.sim_step % 10 == 0:
                 print(self.sim_step/10, "s")
-            if self.sim_step % 300 == 0:
+                if self.graph_plot:
+                    total_delay = _get_total_delay()
+                    time = self.sim_step//10
+                    plot.update_plot(time, total_delay)
+
+            traci_fetch_itv = 100
+            if self.sim_step % traci_fetch_itv == 0:  # TODO 这个traci_fetch_itv也可以写到var里面
                 Update_Cars_info(self.global_context)
-                if self.sim_step % 300 == 0:
+                if self.sim_step % traci_fetch_itv == 0:
                     Calc_nearby_accident(self.global_context)
                     Calc_traffic_flow(self.global_context)
                     if self.data_trade:
                         trade_cnt = datatrade.controller.trade_count
                         traffic_light_id = 'A1'
-                        current_phase = traci.trafficlight.getPhase(traffic_light_id)
-                        total_phases = traci.trafficlight.getPhaseNumber(traffic_light_id)
-                        # if 交易3次 & 处于最后phase
-                        if (trade_cnt > 3) & (current_phase == total_phases - 1):
+                        # current_phase = traci.trafficlight.getPhase(traffic_light_id)
+                        # # 获取交通灯逻辑的详细信息
+                        # phases = traci.trafficlight.getCompleteRedYellowGreenDefinition(traffic_light_id)[0].phases
+                        # # 计算总相位数
+                        # total_phases = len(phases)
+                        #if 交易3次 【无需判断phase】SUMO允许在任何时刻进行切换，但实际的逻辑变更会在当前相位结束后生效。】
+                        if (trade_cnt > 3):
                             print('condition meet!!!!!! switch signal strategy')
                             SignalControl.data_driven_control(controller_id=traffic_light_id)
                         else:
                             datatrade.start_trade(self.global_context)
                     # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
-                    
-                    if self.sim_step % 300 == 0:
-                        for vid in self.global_context.vehicles.keys():
 
-                            x = self.global_context.vehicles[vid].get_trading_data(
-                                self.global_context
-                            )
-                            if x is not None:
-                                print(x)
-
-            # print(self.sim_step)
             # pdb.set_trace()
             if event:
                 event.event_loger(self.sim_step)
             if trade_register:
                 pass
-            if self.graph_plot:
-                total_delay = _get_total_delay()
-                time_step = self.sim_step
-                plot.update_plot(time_step, total_delay)
-                # if self.simstep % 200 == 0:
-                #     GraphPresent.draw_physic()
-                #     self.draw_control()
+            
             self.sim_step += 1
         traci.close()
-        plot.save_plot(filename=f'{self.data_trade}')
+        plot.save_plot(filename=f'delay_over_time_trade_{self.data_trade}.svg')
         sys.stdout.flush()
 
 
@@ -144,11 +137,11 @@ class SimTraci:
         if self.event:
             event = Event(self.event)
             obj_dict["event"] = event
-        if self.data_trade:
-            trade = DataTrade()
-            signal = SignalControl()
-            obj_dict["trade"] = trade
-            obj_dict["control"] = signal
+        # if self.data_trade:
+        #     trade = DataTrade()
+        #     signal = SignalControl()
+        #     obj_dict["trade"] = trade
+        #     obj_dict["control"] = signal
         return obj_dict
 
     # generate sumo configuration files
