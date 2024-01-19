@@ -8,7 +8,9 @@ __pycache__/
 
 .idea
 
-logs/*  
+logs/*
+
+images/*
 
 **/flow.rou.xml
 **/network.net.xml
