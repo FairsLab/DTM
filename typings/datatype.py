@@ -8,6 +8,7 @@ class GlobalContext:
     event: any = None  # 通过访问Event里的成员属性例如:accident_position等来得到对应event的信息
     step: int = None  # 当前时间
     visibility: float = None  # 可视距离
+    trading_option: Dict[str, any] = field(default_factory=lambda: {'azure': False})   # 添加trading中选项
 
 
 @dataclass
@@ -26,6 +27,20 @@ class PersonalData:
     road_id: str  # 车辆当前所在位置车道id  e.g."A1A0"
     position: List[float]  # 车辆的经纬度位置
 
+@dataclass
+class TradingData:
+    current_token: float
+    history_average_price: float
+    trading_history: List[Dict[str, any]] = field(default_factory=list)  # 交易历史
+    accident_info: AccidentData = field(default_factory=AccidentData)   # 事故信息，主要用于 Vehicle
+
+@dataclass
+class Preference:
+    trading_purpose: str
+    expected_price: float  # current_budget for controller
+    cost: float  # 发起交易时, 车辆要花费的货币
+    skepticism: bool = None  # 对数据保留怀疑态度，主要用于 Controller
+
 
 @dataclass
 class ControllerPersonalData:
@@ -33,12 +48,6 @@ class ControllerPersonalData:
     predicted_income: float = None  # 预测收入，主要用于 Controller
 
 
-@dataclass
-class TradingData:
-    current_token: float
-    history_average_price: float
-    trading_history: List[Dict[str, any]] = field(default_factory=list)  # 交易历史
-    accident_info: Dict[str, any] = None  # 事故信息，主要用于 Vehicle
 
 
 @dataclass
@@ -53,12 +62,6 @@ class TradingHistoryData:
     accident_info: Dict[str, any] = None  # 事故信息，主要用于 Vehicle
 
 
-@dataclass
-class Preference:
-    trading_purpose: str
-    expected_price: float  # current_budget for controller
-    cost: float  # 发起交易时, 车辆要花费的货币
-    skepticism: bool = None  # 对数据保留怀疑态度，主要用于 Controller
 
 
 Offer = [
@@ -70,16 +73,12 @@ Offer = [
             "properties": {
                 "data_description": {
                     "type": "string",
-                    "description": "The description of data which would be traded",
+                    "description": "The description of data which would be traded, including the accident_info, specifically the accident_road_id, distance_to_traing_point and accident_severity ",
                 },
                 "price": {
                     "type": "number",
                     "description": "the proposed price of the data",  # "12 dollars"
                 },
-                # "amount": {
-                #     "type": "number",
-                #     "description": "the amount of traded data",
-                # },
                 "reason": {
                     "type": "string",
                     "description": "the reason to convince controller to buy the data",
@@ -100,7 +99,7 @@ Decision = [
             "properties": {
                 "decision": {
                     "type": "boolean",
-                    "description": "The decision of say yes or no to the offer",
+                    "description": "The decision to the offer, True means yes and False means no",
                 },
                 "reason": {
                     "type": "string",

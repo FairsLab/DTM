@@ -27,7 +27,7 @@ class Event:
         accident_vehicle = None
         for step_start in t_start:
             if step == step_start:
-                # pdb.set_trace()
+                
                 index_accident = t_start.index(step_start)
                 edge = location[index_accident]
                 pos = position[index_accident]
@@ -41,6 +41,8 @@ class Event:
                         ):
                             accident_vehicle = v_id
                             best_pos = v_pos
+                            pdb.set_trace()
+                            print("accident!!!!!!!")
                         if v_pos > pos:
                             if accident_vehicle:
                                 self.accident_object[index_accident] = accident_vehicle
@@ -75,14 +77,32 @@ class Event:
             traci.vehicle.setSpeedMode(v_id, 0)
             traci.vehicle.setSpeed(v_id, 0)
         # accident over
-        for step_end in t_end:
-            if step == step_end:
-                pdb.set_trace()
-                index_accident = t_end.index(step_end)
-                # pdb.set_trace()
-                accident_vehicle = self.accident_object[index_accident]
-                traci.vehicle.setType(accident_vehicle, "human")
-                traci.vehicle.setLaneChangeMode(accident_vehicle, 1621)
-                traci.vehicle.setSpeedMode(accident_vehicle, 31)
-                traci.vehicle.setSpeed(accident_vehicle, -1)
-                del self.accident_object[index_accident]
+        try:
+            for step_end in t_end:
+                if step == step_end:
+                    pdb.set_trace()
+                    index_accident = t_end.index(step_end)
+                    accident_vehicle = self.accident_object[index_accident]
+                    traci.vehicle.setType(accident_vehicle, "human")
+                    traci.vehicle.setLaneChangeMode(accident_vehicle, 1621)
+                    traci.vehicle.setSpeedMode(accident_vehicle, 31)
+                    traci.vehicle.setSpeed(accident_vehicle, -1)
+                    del self.accident_object[index_accident]
+
+        except KeyError as e:
+            print(f"KeyError encountered! Key: {e}")
+            # 可选：打印更多信息来帮助调试
+            print(f"Current step_end: {step_end}")
+            print(f"t_end list: {t_end}")
+
+        # for step_end in t_end:
+        #     if step == step_end:
+        #         pdb.set_trace()
+        #         index_accident = t_end.index(step_end)
+        #         # pdb.set_trace()
+        #         accident_vehicle = self.accident_object[index_accident]
+        #         traci.vehicle.setType(accident_vehicle, "human")
+        #         traci.vehicle.setLaneChangeMode(accident_vehicle, 1621)
+        #         traci.vehicle.setSpeedMode(accident_vehicle, 31)
+        #         traci.vehicle.setSpeed(accident_vehicle, -1)
+        #         del self.accident_object[index_accident]

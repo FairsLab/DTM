@@ -53,11 +53,12 @@ controller_1 = Controller(
 
 if __name__ == "__main__":
     azure = False
+    model = 'gpt-4-1106-preview'
     openai_login(azure=azure)
-    offer_context = vehicle_1.propose_offer(azure = azure)
+    offer_context = vehicle_1.propose_offer(azure = azure, model=model)
     print('*'*30, offer_context)
 
-    decision_context = controller_1.decide_offer(azure = azure, offer_context=offer_context)
+    decision_context = controller_1.decide_offer(azure = azure, model=model, offer_context=offer_context)
     print('*'*30, decision_context)
 
     # # 测试提取函数

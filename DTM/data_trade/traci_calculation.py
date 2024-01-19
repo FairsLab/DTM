@@ -78,7 +78,7 @@ def Calc_nearby_accident(global_context: GlobalContext):
                     "accident_vid": global_context.event.accident_object[eid],
                     "traded": False,
                 }
-
+                print(global_context.vehicles[vid].accident[eid])
 
 # 判断哪些车辆需要进入交易(距离下一个信号灯足够近)
 
@@ -149,3 +149,15 @@ class SumoVehicle:
 class Controller:
     def __init__(self):
         pass
+
+
+# 获取delay
+def _get_total_delay():
+    total_delay = 0.0
+    for veh_id in traci.vehicle.getIDList():
+        current_speed = traci.vehicle.getSpeed(veh_id)
+        max_speed = traci.vehicle.getMaxSpeed(veh_id)
+        if max_speed > 0:  # 避免除以0
+            # 使用(1 - current_speed / max_speed)来近似单个车辆的延迟比例
+            total_delay += (1 - current_speed / max_speed) * traci.simulation.getDeltaT()
+    return total_delay

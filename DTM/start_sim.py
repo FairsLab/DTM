@@ -27,8 +27,10 @@ from DTM.data_trade.traci_calculation import (
     Calc_nearby_accident,
     Calc_traffic_flow,
     GlobalContext,
+    _get_total_delay,
 )
 from typings.datatype import *
+from DTM.plot_delay import RealTimePlot
 
 
 class SimTraci:
@@ -43,7 +45,6 @@ class SimTraci:
         self.anime_variable = kwargs["option"]["gui"]
         self.generate_net = kwargs["option"]["generate_net"]
         self.control_option = kwargs["option"]["control_option"]
-        self.data_trade = kwargs["option"]["trading"]
         self.graph_plot = kwargs["option"]["graph"]
         # network data path
         self.gen_path = kwargs["network"]
@@ -52,6 +53,10 @@ class SimTraci:
         self.global_context = GlobalContext()
         self.global_context.vehicles = {}
         self.global_context.visibility = kwargs["visibility"]
+        # trading option
+        self.global_context.trading_option['azure']= kwargs["option"]["azure"]
+        self.global_context.trading_option['openai_model'] = kwargs["option"]["openai_model"]
+        self.data_trade = kwargs["option"]["trading"]
         # network settings for a random network
         self.network_setting = kwargs["network_setting"]
         # simulation settings
@@ -59,12 +64,15 @@ class SimTraci:
         # sim step initial
         self.sim_step = 0
 
+ 
     def __sumo_run(self, **kwargs):
         event = kwargs.get("event", None)
         self.global_context.event = event
         trade_register = kwargs.get("trade", None)
         controlled_signal = kwargs.get("control", None)
         datatrade = DataTrade(controller_1)
+        plot = RealTimePlot()  # TODO 增加plot
+        
         while traci.simulation.getMinExpectedNumber() > 0:
             traci.simulationStep()
             # pdb.set_trace()
@@ -76,7 +84,25 @@ class SimTraci:
                 if self.sim_step % 300 == 0:
                     Calc_nearby_accident(self.global_context)
                     Calc_traffic_flow(self.global_context)
-                    datatrade.start_trade(self.global_context)
+                    
+                    # TODO if 交易3次 $ 处于最后phase
+                    trade_cnt = datatrade.controller.trade_count
+                    if trade_cnt > 3:
+                        print('condition meet!!!!!! switch signal strategy')
+                        SignalControl.data_driven_control(controller_id='A1')
+                    else:
+                        datatrade.start_trade(self.global_context)
+
+                    # traci.trafficlight.getPhase(traffic_light_id)
+                    # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
+                    # signal_control(change_rate)
+                    # Apply control strategy after data trading and traffic data calculations
+                    # if condition_for_data_driven_strategy:  # Define your condition based on the latest data
+                    #     data_driven_strategy.apply_strategy()
+                    # else:
+                    #     basic_strategy.apply_strategy()
+                
+                    
                     if self.sim_step % 300 == 0:
                         for vid in self.global_context.vehicles.keys():
 
@@ -92,13 +118,18 @@ class SimTraci:
                 event.event_loger(self.sim_step)
             if trade_register:
                 pass
-            # if self.graph_plot:
-            #     if self.simstep % 200 == 0:
-            #         GraphPresent.draw_physic()
-            #         self.draw_control()
+            if self.graph_plot:
+                total_delay = _get_total_delay()
+                time_step = self.sim_step
+                plot.update_plot(time_step, total_delay)
+                # if self.simstep % 200 == 0:
+                #     GraphPresent.draw_physic()
+                #     self.draw_control()
             self.sim_step += 1
         traci.close()
+        plot.save_plot(filename='test')
         sys.stdout.flush()
+
 
     # start sumo simulation
     def __sumo_start(self):
