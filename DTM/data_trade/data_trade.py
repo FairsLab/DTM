@@ -54,6 +54,7 @@ class DataTrade:
 
             # 调用trading中的函数，发起交易
                 azure = global_context.trading_option['azure']
+                model = global_context.trading_option['openai_model']
                 openai_login(azure=azure)
                 with open(offer_raw_file, "a+") as offer_raw_file, \
                     open(decision_raw_file, "a+") as decision_raw_file, \
@@ -62,8 +63,8 @@ class DataTrade:
 
                     for retry in range(3):
                         try:
-                            self.offer_context = vehicle.propose_offer(azure=azure)
-                            self.decision_context = self.controller.decide_offer(azure=azure, offer_context=self.offer_context)
+                            self.offer_context = vehicle.propose_offer(azure=azure, model=model)
+                            self.decision_context = self.controller.decide_offer(azure=azure, model=model, offer_context=self.offer_context)
                             self.extracted_decision = extract_decision(self.decision_context)
                             self.extracted_offer = extract_offer(self.offer_context)
                             # 保存文件

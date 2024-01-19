@@ -55,6 +55,7 @@ class SimTraci:
         self.global_context.visibility = kwargs["visibility"]
         # trading option
         self.global_context.trading_option['azure']= kwargs["option"]["azure"]
+        self.global_context.trading_option['openai_model'] = kwargs["option"]["openai_model"]
         self.data_trade = kwargs["option"]["trading"]
         # network settings for a random network
         self.network_setting = kwargs["network_setting"]

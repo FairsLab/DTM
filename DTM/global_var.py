@@ -41,6 +41,7 @@ generate_net = False  # 是否重新生成路网
 control_option = False
 trading_option = False
 azure_option = False
+openai_model = "gpt-4-1106-preview"  # gpt-3.5-turbo或者gpt-4-1106-preview
 gui = True
 graph_plot = True
 simulation_option = {
@@ -48,6 +49,7 @@ simulation_option = {
     "control_option": control_option,
     "trading": trading_option,
     "azure": azure_option,
+    "openai_model": openai_model,
     "gui": gui,
     "graph": graph_plot,
 }
