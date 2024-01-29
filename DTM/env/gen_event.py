@@ -41,7 +41,6 @@ class Event:
                         ):
                             accident_vehicle = v_id
                             best_pos = v_pos
-                            pdb.set_trace()
                             print("accident!!!!!!!")
                         if v_pos > pos:
                             if accident_vehicle:
@@ -65,7 +64,7 @@ class Event:
                             break
                 else:
                     accident_index = t_start.index(step_start)
-                    pdb.set_trace()
+                    # pdb.set_trace()
                     del t_start[accident_index]
                     del t_end[accident_index]
                     del location[accident_index]
@@ -80,7 +79,7 @@ class Event:
         try:
             for step_end in t_end:
                 if step == step_end:
-                    pdb.set_trace()
+                    # pdb.set_trace()
                     index_accident = t_end.index(step_end)
                     accident_vehicle = self.accident_object[index_accident]
                     traci.vehicle.setType(accident_vehicle, "human")

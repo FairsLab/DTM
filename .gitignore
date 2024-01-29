@@ -12,7 +12,7 @@ logs/*
 
 images/*
 
-**/flow.rou.xml
-**/network.net.xml
+# **/flow.rou.xml
+# **/network.net.xml
 **/summary.out.xml
 **/tripinfo.out.xml

@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 from matplotlib import style
+import os
 
 # 设置matplotlib的风格为'ggplot'
 style.use('ggplot')
@@ -12,9 +13,11 @@ class RealTimePlot:
         self.fig, self.ax = plt.subplots()
         self.x, self.y = [], []
         self.line, = self.ax.plot(self.x, self.y, 'r-', linewidth=2)  # 初始化一条红色线
-
-    def update_plot(self, time_step, total_delay):
-        self.x.append(time_step)
+        self.ax.set_xlabel('Time (s)')  # 设置X轴名字
+        self.ax.set_ylabel('Total average delay')  # 设置Y轴名字
+        
+    def update_plot(self, time, total_delay):
+        self.x.append(time)
         self.y.append(total_delay)
         self.line.set_xdata(self.x)
         self.line.set_ydata(self.y)
@@ -28,5 +31,7 @@ class RealTimePlot:
 
 
     def save_plot(self, filename = None):
-        filename = 'delay_over_time' + filename
-        self.fig.savefig(filename, dpi=300)  # 保存图片到文件
+        path = '.images/'
+        if not os.path.exists(path):
+            os.makedirs(path)  # 创建目录
+        self.fig.savefig(path+filename, dpi=300)  # 保存图片到文件
