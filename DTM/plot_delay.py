@@ -31,7 +31,7 @@ class RealTimePlot:
 
 
     def save_plot(self, filename = None):
-        path = '.images/'
+        path = './images/'
         if not os.path.exists(path):
             os.makedirs(path)  # 创建目录
         self.fig.savefig(path+filename, dpi=300)  # 保存图片到文件

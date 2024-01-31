@@ -115,7 +115,8 @@ class SimTraci:
             
             self.sim_step += 1
         traci.close()
-        plot.save_plot(filename=f'delay_over_time_trade_{self.data_trade}.svg')
+        filename = f'DelayOverTime_trade_{self.data_trade}_gen_{self.simulation_setting["period_gen"]}.png'
+        plot.save_plot(filename=filename)
         sys.stdout.flush()
 
 

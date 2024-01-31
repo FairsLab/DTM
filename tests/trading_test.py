@@ -52,6 +52,7 @@ controller_1 = Controller(
 )
 
 if __name__ == "__main__":
+    load_dotenv()
     azure = False
     model = 'gpt-4-1106-preview'
     openai_login(azure=azure)

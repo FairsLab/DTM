@@ -7,7 +7,7 @@ num_lane = 3  # number of lanes
 network_settings = {"num_int": num_intersection, "length": length, "num_lane": num_lane}
 
 """simulation settings"""
-period_gen = 900  # generate time (duration of generating vehicle)
+period_gen = 800  # generate time (duration of generating vehicle)
 peak_start = 100  # peak hour start
 peak_end = 300  # peak hour end
 flow_off = 300  # off-peak hour flow N/hour
@@ -29,20 +29,21 @@ simulation_settings = {
 
 """irregular event"""
 # irregular event attribute
+
 v_accident = {
-    "start_time": [2000, 4000],
-    "end_time": [5000, 7000],
-    "lane": ["A0A1_0", "A0A1_1"],
-    "pos": [480, 450],
+    "start_time": [2000], #, 4000],
+    "end_time": [5000], #7000],
+    "lane": ["A0A1_0"], #"A0A1_1"],
+    "pos": [480], # 450],
 }
 
 """simulation and trading option"""
-generate_net = False  # 是否重新生成路网
+generate_net = True  # 是否重新生成路网
 control_option = False # actuated traffic signal on or off
 trading_option = True
 azure_option = False
 openai_model = "gpt-4-1106-preview"  # gpt-3.5-turbo或者gpt-4-1106-preview
-gui = True
+gui = False
 graph_plot = True
 simulation_option = {
     "generate_net": generate_net,
