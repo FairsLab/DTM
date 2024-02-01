@@ -72,8 +72,12 @@ class SimTraci:
         controlled_signal = kwargs.get("control", None)  # TODO 其他control strategy的开关？是否和trading_option重复了？
         datatrade = DataTrade(controller_1)
         plot = RealTimePlot()  # TODO 增加plot
+        file_path = f'./logs/trade_{self.data_trade}_gen_{self.simulation_setting["period_gen"]}_peakflow_{self.simulation_setting["flow_peak"]}/'
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)  # 创建目录
         
-        while traci.simulation.getMinExpectedNumber() > 0:
+        while self.sim_step / 10 <= traci.simulation.getEndTime():
+        # traci.simulation.getMinExpectedNumber() > 0:
             traci.simulationStep()
             # pdb.set_trace()
             self.global_context.step = self.sim_step
@@ -83,14 +87,15 @@ class SimTraci:
                     total_delay = _get_total_delay()
                     time = self.sim_step//10
                     plot.update_plot(time, total_delay)
-
-            traci_fetch_itv = 100
-            if self.sim_step % traci_fetch_itv == 0:  # TODO 这个traci_fetch_itv也可以写到var里面
-                Update_Cars_info(self.global_context)
-                if self.sim_step % traci_fetch_itv == 0:
-                    Calc_nearby_accident(self.global_context)
-                    Calc_traffic_flow(self.global_context)
-                    if self.data_trade:
+            if self.data_trade:
+                traci_fetch_itv = 100
+            # else:
+            #     traci_fetch_itv = 500
+                if self.sim_step % traci_fetch_itv == 0:  # TODO 这个traci_fetch_itv也可以写到var里面
+                    Update_Cars_info(self.global_context)
+                    if self.sim_step % traci_fetch_itv == 0:
+                        Calc_nearby_accident(self.global_context)
+                        Calc_traffic_flow(self.global_context)
                         trade_cnt = datatrade.controller.trade_count
                         traffic_light_id = 'A1'
                         # current_phase = traci.trafficlight.getPhase(traffic_light_id)
@@ -103,8 +108,8 @@ class SimTraci:
                             print('condition meet!!!!!! switch signal strategy')
                             SignalControl.data_driven_control(controller_id=traffic_light_id)
                         else:
-                            datatrade.start_trade(self.global_context)
-                    # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
+                            datatrade.start_trade(self.global_context,file_path)
+                        # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
 
             # pdb.set_trace()
@@ -115,8 +120,8 @@ class SimTraci:
             
             self.sim_step += 1
         traci.close()
-        filename = f'DelayOverTime_trade_{self.data_trade}_gen_{self.simulation_setting["period_gen"]}.png'
-        plot.save_plot(filename=filename)
+        file_name = f'DelayOverTime_trade'
+        plot.save_plot(file_path=file_path, file_name=file_name)
         sys.stdout.flush()
 
 

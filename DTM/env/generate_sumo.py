@@ -20,7 +20,7 @@ class GenSumo:
         # self.sim_period = simulation_settings['period_sim']
         self.gen_period = simulation_settings["period_gen"]
         self.peak_start = simulation_settings["peak_start"]
-        self.peak_end = simulation_settings["peak_start"]
+        self.peak_end = simulation_settings["peak_end"]
         self.flow_peak = simulation_settings["flow_peak"]
         self.flow_op = simulation_settings["flow_off"]
         self.mpr_peak = simulation_settings["mpr_peak"]
@@ -91,7 +91,7 @@ class GenSumo:
              <vType id="data" color="0,1,0" accel="0.73" decel="1.67" length="5" minGap="2.0" maxSpeed="14" 
             carFollowModel="IDM" tau="1.0"/>
 
-            <vType id="human" color="0.5,0,0" accel="0.73" decel="1.67" length="5" minGap="2.0" maxSpeed="14" 
+            <vType id="human" color="0,0,1" accel="0.73" decel="1.67" length="5" minGap="2.0" maxSpeed="14" 
             carFollowModel="IDM" tau="1.6"/>
 
             <vType id="accident" color="1,0,0" accel="0.73" decel="1400" length="5" minGap="2.0" maxSpeed="14" 
@@ -172,6 +172,7 @@ class GenSumo:
                 """
         <time>
             <begin value="0"/>
+            <end value="1200"/>
         </time>
         <processing>
             <route-steps value="200" />

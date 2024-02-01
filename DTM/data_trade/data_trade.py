@@ -15,15 +15,15 @@ def create_and_append_json(file, data):
     json.dump(data, file)
     file.write('\n')
 
-def ensure_log_directories_exist():
+def ensure_log_directories_exist(file_path):
     """确保日志目录存在"""
-    os.makedirs('./logs', exist_ok=True)
+    os.makedirs(file_path, exist_ok=True)
 
 class DataTrade:
     def __init__(self, controller: Controller):
         self.controller = controller
 
-    def start_trade(self, global_context: GlobalContext):
+    def start_trade(self, global_context: GlobalContext, file_path:str):
         vids = traci.vehicle.getIDList()
         for vid in vids:
             if traci.vehicle.getTypeID(vid) == "human" or self.controller.trade_count >3:
@@ -45,13 +45,15 @@ class DataTrade:
                 )
                 # 获取当前日期
                 current_date = datetime.datetime.now().strftime("%Y%m%d")
+                # 路径
+                file_path = file_path+'js/'
                 # 确保路径有效
-                ensure_log_directories_exist()
+                ensure_log_directories_exist(file_path)
                 # 日志保存路径
-                offer_raw_file = f"./logs/offer_raw_{current_date}.json"
-                decision_raw_file = f"./logs/decision_raw_{current_date}.json"
-                offers_file = f"./logs/offers_{current_date}.json"
-                decisions_file = f"./logs/decisions_{current_date}.json"
+                offer_raw_file = file_path + f"offer_raw_{current_date}.json"
+                decision_raw_file = file_path + f"decision_raw_{current_date}.json"
+                offers_file = file_path + f"offers_{current_date}.json"
+                decisions_file = file_path + f"decisions_{current_date}.json"
 
             # 调用trading中的函数，发起交易
                 azure = global_context.trading_option['azure']

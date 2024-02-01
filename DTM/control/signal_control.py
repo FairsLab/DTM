@@ -16,7 +16,7 @@ class SignalControl:
         # Create a Logic instance
         program_id = "data_driven_control"
         phases = [
-            traci.trafficlight.Phase(52, "GGGGgrrrrrGGGGgrrrrr", 5, 60),
+            traci.trafficlight.Phase(47, "GGGGgrrrrrGGGGgrrrrr", 5, 60),
             traci.trafficlight.Phase(3, "yyyyyrrrrryyyyyrrrrr"),
             traci.trafficlight.Phase(42, "rrrrrGGGGgrrrrrGGGGg", 5, 50),
             traci.trafficlight.Phase(3, "rrrrryyyyyrrrrryyyyy")

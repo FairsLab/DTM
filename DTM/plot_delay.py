@@ -14,7 +14,7 @@ class RealTimePlot:
         self.x, self.y = [], []
         self.line, = self.ax.plot(self.x, self.y, 'r-', linewidth=2)  # 初始化一条红色线
         self.ax.set_xlabel('Time (s)')  # 设置X轴名字
-        self.ax.set_ylabel('Total average delay')  # 设置Y轴名字
+        self.ax.set_ylabel('Average delay (s)')  # 设置Y轴名字
         
     def update_plot(self, time, total_delay):
         self.x.append(time)
@@ -30,8 +30,6 @@ class RealTimePlot:
         plt.show()
 
 
-    def save_plot(self, filename = None):
-        path = './images/'
-        if not os.path.exists(path):
-            os.makedirs(path)  # 创建目录
-        self.fig.savefig(path+filename, dpi=300)  # 保存图片到文件
+    def save_plot(self, file_path = None, file_name = None):
+        self.fig.savefig(file_path+file_name+'.png', dpi=300)  # 保存图片到文件
+        self.fig.savefig(file_path+file_name+'.svg', dpi=300)  # 保存图片到文件
