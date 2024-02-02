@@ -92,7 +92,7 @@ Offer = [
 
 Decision = [
     {
-        "name": "offer_dicision",
+        "name": "offer_decision",
         "description": "decide whether to take the offer based on the proposed offer context and the information I have",
         "parameters": {
             "type": "object",

@@ -58,15 +58,19 @@ class GenSumo:
         time_pool_peak = list(
             range(self.peak_start, self.peak_end)
         )  # peak hour depart pool
+        print('time_pool_peak',len(time_pool_peak))
         time_pool_off = list(
             filterfalse(time_pool_peak.__contains__, list(range(self.gen_period)))
         )  # off-peak poll
+        print('time_off',len(time_pool_off))
         num_veh_off = (
             int(len(time_pool_off) * self.flow_op / 3600) * num_route
         )  # off-peak depart number
+        print('num_veh_off',num_veh_off)
         num_veh_peak = (
             int(len(time_pool_peak) * self.flow_peak / 3600) * num_route
         )  # peak depart number
+        print('num_veh_peak',num_veh_peak)
         time_off_hv = random.choices(
             time_pool_off, k=num_route * int(num_veh_off * (1 - self.mpr_op))
         )  # HV off-peak

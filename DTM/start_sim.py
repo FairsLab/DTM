@@ -16,6 +16,7 @@ try:
 except ImportError:
     sys.exit("Please declare the environment variable 'SUMO_HOME'")
 import traci
+import csv
 
 
 from DTM.env.generate_sumo import GenSumo
@@ -72,7 +73,12 @@ class SimTraci:
         controlled_signal = kwargs.get("control", None)  # TODO 其他control strategy的开关？是否和trading_option重复了？
         datatrade = DataTrade(controller_1)
         plot = RealTimePlot()  # TODO 增加plot
-        file_path = f'./logs/trade_{self.data_trade}_gen_{self.simulation_setting["period_gen"]}_peakflow_{self.simulation_setting["flow_peak"]}/'
+        file_path = f'./logs/peakend_{self.simulation_setting["peak_end"]}_peakflow_{self.simulation_setting["flow_peak"]}_opflow{self.simulation_setting["flow_off"]}_trade_{self.data_trade}/'
+        file_name = f'DelayOverTime_trade'
+        with open(file_path + file_name + '.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['Time', 'Qlength', 'Delay'])
+
         if not os.path.exists(file_path):
             os.makedirs(file_path)  # 创建目录
         
@@ -80,14 +86,27 @@ class SimTraci:
         # traci.simulation.getMinExpectedNumber() > 0:
             traci.simulationStep()
             # pdb.set_trace()
+            
             self.global_context.step = self.sim_step
             if self.sim_step % 10 == 0:
                 print(self.sim_step/10, "s")
                 if self.graph_plot:
+                    # print(traci.lane.getEdgeID(A0A1_1))
+                    q_length = traci.edge.getLastStepHaltingNumber('A0A1') + traci.edge.getLastStepHaltingNumber('B1A1') + traci.edge.getLastStepHaltingNumber('top0A1') + traci.edge.getLastStepHaltingNumber('left1A1')
                     total_delay = _get_total_delay()
                     time = self.sim_step//10
-                    plot.update_plot(time, total_delay)
-            if self.data_trade:
+                    # 将变量转换为字符串
+                    q_length_str = str(q_length)
+                    total_delay_str = str(total_delay)
+                    time_str = str(time)
+                    variables = [time_str, q_length_str, total_delay_str]
+
+                    plot.update_plot(time, q_length)
+                    # 使用 csv 模块写入 CSV 文件
+                    with open(file_path + file_name + '.csv', 'a', newline='') as csvfile:
+                        writer = csv.writer(csvfile)
+                        writer.writerow(variables)
+            if (self.data_trade):
                 traci_fetch_itv = 100
             # else:
             #     traci_fetch_itv = 500
@@ -104,13 +123,17 @@ class SimTraci:
                         # # 计算总相位数
                         # total_phases = len(phases)
                         #if 交易3次 【无需判断phase】SUMO允许在任何时刻进行切换，但实际的逻辑变更会在当前相位结束后生效。】
-                        if (trade_cnt > 3):
+                        if trade_cnt > 3:
+                            # if (self.sim_step // 10 > 500) & (self.sim_step // 10 < 700):                               
                             print('condition meet!!!!!! switch signal strategy')
                             SignalControl.data_driven_control(controller_id=traffic_light_id)
                         else:
                             datatrade.start_trade(self.global_context,file_path)
                         # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
                     # signal_control(change_rate)
+                        # if (self.sim_step // 10 > 700) & (self.sim_step // 10 < 800):                               
+                        #     print('switch back signal strategy!!!!!!')
+                        #     SignalControl.original_control(controller_id=traffic_light_id)
 
             # pdb.set_trace()
             if event:
@@ -120,7 +143,7 @@ class SimTraci:
             
             self.sim_step += 1
         traci.close()
-        file_name = f'DelayOverTime_trade'
+        
         plot.save_plot(file_path=file_path, file_name=file_name)
         sys.stdout.flush()
 
