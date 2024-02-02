@@ -75,6 +75,8 @@ class SimTraci:
         plot = RealTimePlot()  # TODO 增加plot
         file_path = f'./logs/peakend_{self.simulation_setting["peak_end"]}_peakflow_{self.simulation_setting["flow_peak"]}_opflow{self.simulation_setting["flow_off"]}_trade_{self.data_trade}/'
         file_name = f'DelayOverTime_trade'
+        is_strategy_changed = False
+        
         with open(file_path + file_name + '.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(['Time', 'Qlength', 'Delay'])
@@ -106,6 +108,17 @@ class SimTraci:
                     with open(file_path + file_name + '.csv', 'a', newline='') as csvfile:
                         writer = csv.writer(csvfile)
                         writer.writerow(variables)
+                if self.data_trade is False:
+                    traffic_light_id = 'A1'
+                    if (self.sim_step // 10 > 500) & (is_strategy_changed==False) & (self.sim_step // 10 < 600):
+                        print('switch signal strategy!!!!!!')
+                        SignalControl.original_control(controller_id=traffic_light_id)
+                        is_strategy_changed = True          
+                    if (self.sim_step // 10 > 600) & (is_strategy_changed==True):                               
+                        print('switch back signal strategy!!!!!!')
+                        SignalControl.original_control(controller_id=traffic_light_id)
+                        is_strategy_changed = False
+                
             if (self.data_trade):
                 traci_fetch_itv = 100
             # else:
@@ -124,9 +137,15 @@ class SimTraci:
                         # total_phases = len(phases)
                         #if 交易3次 【无需判断phase】SUMO允许在任何时刻进行切换，但实际的逻辑变更会在当前相位结束后生效。】
                         if trade_cnt > 3:
-                            # if (self.sim_step // 10 > 500) & (self.sim_step // 10 < 700):                               
-                            print('condition meet!!!!!! switch signal strategy')
-                            SignalControl.data_driven_control(controller_id=traffic_light_id)
+                            if (self.sim_step // 10 > 500) & (is_strategy_changed==False) & (self.sim_step // 10 < 600):
+                                print('switch signal strategy!!!!!!')
+                                SignalControl.data_driven_control(controller_id=traffic_light_id)
+                                is_strategy_changed = True          
+                            if (self.sim_step // 10 > 600) & (is_strategy_changed==True):                               
+                                print('switch back signal strategy!!!!!!')
+                                SignalControl.original_control(controller_id=traffic_light_id)
+                                is_strategy_changed = False
+                            # SignalControl.data_driven_control(controller_id=traffic_light_id)
                         else:
                             datatrade.start_trade(self.global_context,file_path)
                         # TODO change_rate: float32 = rate(accident: increase the rate of using p2, non_accident: p1)
@@ -134,6 +153,11 @@ class SimTraci:
                         # if (self.sim_step // 10 > 700) & (self.sim_step // 10 < 800):                               
                         #     print('switch back signal strategy!!!!!!')
                         #     SignalControl.original_control(controller_id=traffic_light_id)
+
+
+                
+
+
 
             # pdb.set_trace()
             if event:

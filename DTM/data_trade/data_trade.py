@@ -25,6 +25,8 @@ class DataTrade:
 
     def start_trade(self, global_context: GlobalContext, file_path:str):
         vids = traci.vehicle.getIDList()
+        # 路径
+        file_path_js = file_path+'js/'
         for vid in vids:
             if traci.vehicle.getTypeID(vid) == "human" or self.controller.trade_count >3:
                 continue
@@ -45,15 +47,14 @@ class DataTrade:
                 )
                 # 获取当前日期
                 current_date = datetime.datetime.now().strftime("%Y%m%d")
-                # 路径
-                file_path = file_path+'js/'
+                
                 # 确保路径有效
-                ensure_log_directories_exist(file_path)
+                ensure_log_directories_exist(file_path_js)
                 # 日志保存路径
-                offer_raw_file = file_path + f"offer_raw_{current_date}.json"
-                decision_raw_file = file_path + f"decision_raw_{current_date}.json"
-                offers_file = file_path + f"offers_{current_date}.json"
-                decisions_file = file_path + f"decisions_{current_date}.json"
+                offer_raw_file = file_path_js + f"offer_raw_{current_date}.json"
+                decision_raw_file = file_path_js + f"decision_raw_{current_date}.json"
+                offers_file = file_path_js + f"offers_{current_date}.json"
+                decisions_file = file_path_js + f"decisions_{current_date}.json"
 
             # 调用trading中的函数，发起交易
                 azure = global_context.trading_option['azure']
