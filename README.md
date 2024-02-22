@@ -12,14 +12,7 @@ DTM（Data on the Move）项目旨在通过数据交易和分析，优化城市�
 ## 安装和使用
 1. 克隆仓库：`git clone https://github.com/FairsLab/DTM.git`
 2. 安装依赖：详见`requirements.txt`
-3. 运行SUMO仿真：参考`sumo_simulation_guide.md`
-4. 数据定价和交易：运行`trade_simulation.py`
-
-## TODO 列表
-- [ ] 完善`evaluate`函数（输入：data + preference，输出：price, data description, reason）。
-- [ ] 对齐SUMO中获取的数据和trading.py中数据格式。
-- [ ] 系统的数据流转图（包括交易平台）
-- [ ] 构建交易系统的历史数据库。
+3. 交通仿真和数据定价：运行`main.py`，推荐使用`python -m DTM.main`
 
 ## 实验场景和流程
 - 双向4车道城市主干道仿真。
@@ -34,6 +27,14 @@ DTM（Data on the Move）项目旨在通过数据交易和分析，优化城市�
 本项目遵循MIT许可。详见`LICENSE`文件。
 
 ## 联系方式
-有关项目的任何疑问，请联系[项目维护者](test)。
+有关项目的任何疑问，请联系[项目维护者](eveyu@zju.edu.cn)。
 
 ---
+
+## 待完善功能
+- [ ] 在logs里面增加trading_data， trading_histroy 和preference的存储
+- [ ] 增加 signal control strategy 的动态选择
+- [ ] 增加与 SUMO RL的控制策略效果对比 
+- [ ] 加速SUMO车辆信息update的速度
+- [ ] 多线程调用SUMO
+
