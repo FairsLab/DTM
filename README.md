@@ -32,6 +32,8 @@ DTM（Data on the Move）项目旨在通过数据交易和分析，优化城市�
 ---
 
 ## 待完善功能
+- [ ] 增加history_price的计算机制
+- [ ] 增加生成agent preference的功能
 - [ ] 在logs里面增加trading_data， trading_histroy 和preference的存储
 - [ ] 增加 signal control strategy 的动态选择
 - [ ] 增加与 SUMO RL的控制策略效果对比 
